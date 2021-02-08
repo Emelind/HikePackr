@@ -13,6 +13,8 @@
 		987BC0FC25D1B86C00C10D5D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 987BC0FB25D1B86C00C10D5D /* Preview Assets.xcassets */; };
 		987BC0FE25D1B86C00C10D5D /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BC0FD25D1B86C00C10D5D /* Persistence.swift */; };
 		987BC10125D1B86C00C10D5D /* HikePackr.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 987BC0FF25D1B86C00C10D5D /* HikePackr.xcdatamodeld */; };
+		987BC10E25D1C2B500C10D5D /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BC10D25D1C2B500C10D5D /* FilterView.swift */; };
+		987BC11125D1C2E600C10D5D /* AddEditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BC11025D1C2E600C10D5D /* AddEditItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		987BC0FD25D1B86C00C10D5D /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		987BC10025D1B86C00C10D5D /* HikePackr.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HikePackr.xcdatamodel; sourceTree = "<group>"; };
 		987BC10225D1B86C00C10D5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		987BC10D25D1C2B500C10D5D /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		987BC11025D1C2E600C10D5D /* AddEditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,8 @@
 				987BC10225D1B86C00C10D5D /* Info.plist */,
 				987BC0FF25D1B86C00C10D5D /* HikePackr.xcdatamodeld */,
 				987BC0FA25D1B86C00C10D5D /* Preview Content */,
+				987BC10D25D1C2B500C10D5D /* FilterView.swift */,
+				987BC11025D1C2E600C10D5D /* AddEditItemView.swift */,
 			);
 			path = HikePackr;
 			sourceTree = "<group>";
@@ -145,8 +151,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				987BC10125D1B86C00C10D5D /* HikePackr.xcdatamodeld in Sources */,
+				987BC11125D1C2E600C10D5D /* AddEditItemView.swift in Sources */,
 				987BC0FE25D1B86C00C10D5D /* Persistence.swift in Sources */,
 				987BC0F725D1B86A00C10D5D /* ContentView.swift in Sources */,
+				987BC10E25D1C2B500C10D5D /* FilterView.swift in Sources */,
 				987BC0F525D1B86A00C10D5D /* HikePackrApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

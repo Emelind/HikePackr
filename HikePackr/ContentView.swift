@@ -9,27 +9,64 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
+    
     @Environment(\.managedObjectContext) private var viewContext
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
+    @FetchRequest(entity: Item.entity(), sortDescriptors: [])
+    
     private var items: FetchedResults<Item>
+    
+    @State var itemIsLongPressed = false
+    
+    @State var showFilterView = false
 
     var body: some View {
-        List {
-            ForEach(items) { item in
-                Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+        NavigationView {
+            List {
+                ForEach(items) { item in
+                    HStack {
+                        Text(String(Int(item.quantity.rounded(.up))))
+                            .padding(.leading)
+                        if let measurement = item.measurement {
+                            Text(measurement)
+                        }
+                        if let name = item.name {
+                            Text(name)
+                        }
+                        Spacer()
+                        Image(systemName: "bag.badge.plus")
+                            .padding(.trailing)
+                    }
+                }
+                .onTapGesture {
+                    if (itemIsLongPressed) {
+                        let newBool = false
+                        itemIsLongPressed = newBool
+                        //AVMARKERA SOM TAPPED
+                    }
+                }
+                .onLongPressGesture(minimumDuration: 0.1) {
+                    itemIsLongPressed = true
+                    // MARKERA SOM PRESSED
+                }
             }
-            .onDelete(perform: deleteItems)
-        }
-        .toolbar {
-            #if os(iOS)
-            EditButton()
-            #endif
-
-            Button(action: addItem) {
-                Label("Add Item", systemImage: "plus")
+            .listStyle(PlainListStyle())
+            .navigationTitle("Things to pack")
+            .navigationBarItems(leading: Button(action: {
+                showFilterView = true
+            }, label: {
+                Text("Filter")
+            }), trailing: itemIsLongPressed ? NavigationLink(
+                                        destination: AddEditItemView(),
+                                        label: {
+                                            Text("Edit item")
+                                        }) : NavigationLink(
+                                        destination: AddEditItemView(),
+                                        label: {
+                                            Text("Add new item")
+                                        }))
+            .sheet(isPresented: $showFilterView) {
+                FilterView()
             }
         }
     }
@@ -37,13 +74,10 @@ struct ContentView: View {
     private func addItem() {
         withAnimation {
             let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
 
             do {
                 try viewContext.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
@@ -57,21 +91,12 @@ struct ContentView: View {
             do {
                 try viewContext.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
         }
     }
 }
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
