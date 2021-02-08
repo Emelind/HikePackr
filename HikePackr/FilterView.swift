@@ -10,7 +10,10 @@ import SwiftUI
 struct FilterView: View {
     
     // FAKE FOR LAYOUT
-    var isChecked = false
+    @State var tentIsChecked = false
+    @State var cabinIsChecked = false
+    @State var hotelIsChecked = false
+    
     
     // FAKE FOR LAYOUT
     @State var numberOfDays = 1
@@ -23,16 +26,25 @@ struct FilterView: View {
                 }
                 Section(header: Text("Type of stay")) {
                     HStack {
-                        Image(systemName: isChecked ? "xmark.square" : "square")
+                        Image(systemName: tentIsChecked ? "xmark.square" : "square")
                         Text("Tent")
                     }
-                    HStack {
-                        Image(systemName: isChecked ? "xmark.square" : "square")
-                        Text("Cabin")
+                    .onTapGesture {
+                        tentIsChecked.toggle()
                     }
                     HStack {
-                        Image(systemName: isChecked ? "xmark.square" : "square")
+                        Image(systemName: cabinIsChecked ? "xmark.square" : "square")
+                        Text("Cabin")
+                    }
+                    .onTapGesture {
+                        cabinIsChecked.toggle()
+                    }
+                    HStack {
+                        Image(systemName: hotelIsChecked ? "xmark.square" : "square")
                         Text("Hotel")
+                    }
+                    .onTapGesture {
+                        hotelIsChecked.toggle()
                     }
                 }
                 Section(header: Text("Number of days")) {
@@ -44,7 +56,6 @@ struct FilterView: View {
                     Text("Apply")
                 })
             }
-            
         }
     }
 }
