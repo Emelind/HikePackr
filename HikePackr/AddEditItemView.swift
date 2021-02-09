@@ -76,6 +76,19 @@ struct AddEditItemView: View {
             }
         }
     }
+    
+//    private func addItem() {
+//        withAnimation {
+//            let newItem = Item(context: viewContext)
+//
+//            do {
+//                try viewContext.save()
+//            } catch {
+//                let nsError = error as NSError
+//                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+//            }
+//        }
+//    }
 }
 
 struct AddEditItemView_Previews: PreviewProvider {

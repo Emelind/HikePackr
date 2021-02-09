@@ -18,45 +18,57 @@ struct ContentView: View {
     
     @State var itemIsLongPressed = false
     
-    @State var showFilterView = false
+    @State var showPackedItemsView = false
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items) { item in
+            VStack {
+                List {
+                    ForEach(items) { item in
+                        HStack {
+                            Text(String(Int(item.quantity.rounded(.up))))
+                                .padding(.leading)
+                            if let measurement = item.measurement {
+                                Text(measurement)
+                            }
+                            if let name = item.name {
+                                Text(name)
+                            }
+                            Spacer()
+                            Image(systemName: "bag.badge.plus")
+                                .padding(.trailing)
+                        }
+                    }
+                    .onTapGesture {
+                        if (itemIsLongPressed) {
+                            let newBool = false
+                            itemIsLongPressed = newBool
+                            //AVMARKERA SOM TAPPED
+                        }
+                    }
+                    .onLongPressGesture(minimumDuration: 0.1) {
+                        itemIsLongPressed = true
+                        // MARKERA SOM PRESSED
+                    }
+                }
+                Button(action: {
+                    showPackedItemsView = true
+                }, label: {
                     HStack {
-                        Text(String(Int(item.quantity.rounded(.up))))
-                            .padding(.leading)
-                        if let measurement = item.measurement {
-                            Text(measurement)
-                        }
-                        if let name = item.name {
-                            Text(name)
-                        }
-                        Spacer()
-                        Image(systemName: "bag.badge.plus")
-                            .padding(.trailing)
+                        Text("Packed Items ( COUNT )")
+                        Image(systemName: "bag.fill")
+                        Image(systemName: "chevron.up")
                     }
-                }
-                .onTapGesture {
-                    if (itemIsLongPressed) {
-                        let newBool = false
-                        itemIsLongPressed = newBool
-                        //AVMARKERA SOM TAPPED
-                    }
-                }
-                .onLongPressGesture(minimumDuration: 0.1) {
-                    itemIsLongPressed = true
-                    // MARKERA SOM PRESSED
+                })
+                .sheet(isPresented: $showPackedItemsView) {
+                    PackedItemsView()
                 }
             }
             .listStyle(PlainListStyle())
             .navigationTitle("Things to pack")
-            .navigationBarItems(leading: Button(action: {
-                showFilterView = true
-            }, label: {
-                Text("Filter")
-            }), trailing: itemIsLongPressed ? NavigationLink(
+            .navigationBarItems(leading: NavigationLink(destination: FilterView(), label: {
+                    Text("Filter")
+                }), trailing: itemIsLongPressed ? NavigationLink(
                                         destination: AddEditItemView(),
                                         label: {
                                             Text("Edit item")
@@ -65,24 +77,11 @@ struct ContentView: View {
                                         label: {
                                             Text("Add new item")
                                         }))
-            .sheet(isPresented: $showFilterView) {
-                FilterView()
-            }
+
         }
     }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
 
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
