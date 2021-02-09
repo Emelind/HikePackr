@@ -9,6 +9,9 @@ import SwiftUI
 
 struct AddEditItemView: View {
     
+    @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.presentationMode) var presentationMode
+    
     // FAKE FOR LAYOUT
     @State var name: String = ""
     
@@ -73,22 +76,44 @@ struct AddEditItemView: View {
                     //Ändra nedan till att visa ALWAYS om perXNumberOfDays == 0 (< 1)
                     Stepper("Every \(perXNumberOfDays) day(s)", value: $perXNumberOfDays, in: 0...10)
                 }
+                Button(action: {
+                    addItem()
+                }, label: {
+                    Text("Save")
+                })
             }
         }
     }
     
-//    private func addItem() {
-//        withAnimation {
-//            let newItem = Item(context: viewContext)
-//
-//            do {
-//                try viewContext.save()
-//            } catch {
-//                let nsError = error as NSError
-//                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//            }
-//        }
-//    }
+    private func addItem() {
+        withAnimation {
+            let newItem = Item(context: viewContext)
+            if name == "" {
+                newItem.name = "Item not named"
+            } else {
+                newItem.name = name
+            }
+            newItem.whenTent = tentIsChecked
+            newItem.whenCabin = cabinIsChecked
+            newItem.whenHotel = hotelIsChecked
+            newItem.quantity = Double(quantity)
+            newItem.measurement = measurementOptions[selectedMeasurementIndex]
+            newItem.perXNumberOfDays = Int16(perXNumberOfDays)
+            newItem.alwaysDisplayed = perXNumberOfDays < 1 ? true : false
+            newItem.category = ""
+            newItem.isPacked = false
+            
+            print("\(newItem)")
+            
+            do {
+                try viewContext.save()
+                presentationMode.wrappedValue.dismiss()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
 }
 
 struct AddEditItemView_Previews: PreviewProvider {

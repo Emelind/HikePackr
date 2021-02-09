@@ -12,7 +12,7 @@ struct ContentView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
 
-    @FetchRequest(entity: Item.entity(), sortDescriptors: [])
+    @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: "isPacked == false"))
     
     private var items: FetchedResults<Item>
     
@@ -26,6 +26,7 @@ struct ContentView: View {
                 List {
                     ForEach(items) { item in
                         HStack {
+                            // NEDAN SKA KALKYLERAS UTIFRÅN ANTAL DAGAR I FILTER
                             Text(String(Int(item.quantity.rounded(.up))))
                                 .padding(.leading)
                             if let measurement = item.measurement {
@@ -36,9 +37,21 @@ struct ContentView: View {
                             }
                             Spacer()
                             Image(systemName: "bag.badge.plus")
+                                .onTapGesture {
+                                    item.isPacked = true
+                                    do {
+                                        try viewContext.save()
+                                    } catch {
+                                        let nsError = error as NSError
+                                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                                    }
+                                }
                                 .padding(.trailing)
                         }
                     }
+                    .onDelete(perform: { indexSet in
+                        deleteItems(offsets: indexSet)
+                    })
                     .onTapGesture {
                         if (itemIsLongPressed) {
                             let newBool = false
@@ -80,8 +93,6 @@ struct ContentView: View {
 
         }
     }
-
-
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
