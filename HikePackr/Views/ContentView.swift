@@ -19,6 +19,8 @@ struct ContentView: View {
     @State var itemIsLongPressed = false
     
     @State var showPackedItemsView = false
+    
+    @State var showAlert = false
 
     var body: some View {
         NavigationView {

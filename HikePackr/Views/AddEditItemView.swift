@@ -16,6 +16,10 @@ struct AddEditItemView: View {
     @State var name: String = ""
     
     // FAKE FOR LAYOUT
+    @State var degreeIsChecked = false
+    @State var chosenDegree = 0.0
+    
+    // FAKE FOR LAYOUT
     @State var tentIsChecked = false
     @State var cabinIsChecked = false
     @State var hotelIsChecked = false
@@ -33,13 +37,25 @@ struct AddEditItemView: View {
                 Section(header: Text("Name of Item")) {
                     TextEditor(text: $name)
                 }
-                HStack {
+                VStack {
                     Text("Add filters?")
                     Text("(Optional - If none is chosen, item is always shown)")
                         .font(.caption)
                 }
                 Section(header: Text("Degrees")) {
-                    Text("Slider goes here")
+                    HStack {
+                        Image(systemName: degreeIsChecked ? "xmark.square" : "square")
+                            Text("Choose degree range")
+                    }
+                    .onTapGesture {
+                        degreeIsChecked.toggle()
+                    }
+                    if (degreeIsChecked) {
+                        HStack {
+                            Text("\(Int(chosenDegree)) °C")
+                            Slider(value: $chosenDegree, in: -10...30, step: 1)
+                        }
+                    }
                 }
                 Section(header: Text("Type of stay")) {
                     HStack {
@@ -99,7 +115,15 @@ struct AddEditItemView: View {
             newItem.quantity = Double(quantity)
             newItem.measurement = measurementOptions[selectedMeasurementIndex]
             newItem.perXNumberOfDays = Int16(perXNumberOfDays)
-            newItem.alwaysDisplayed = perXNumberOfDays < 1 ? true : false
+            newItem.whenDegrees = degreeIsChecked
+            //min
+            //max
+            // When no filter other than quantity is checked/changed, alwaysDisplayed is true, else false
+            if(tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false && degreeIsChecked == false) {
+                newItem.alwaysDisplayed = true
+            } else {
+                newItem.alwaysDisplayed = false
+            }
             newItem.category = ""
             newItem.isPacked = false
             
