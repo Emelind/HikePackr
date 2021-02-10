@@ -20,7 +20,8 @@ struct ContentView: View {
     
     @State var showPackedItemsView = false
     
-    @State var showAlert = false
+    @State private var toBeDeleted: IndexSet?
+    @State var showingDeleteAlert = false
 
     var body: some View {
         NavigationView {
@@ -51,9 +52,28 @@ struct ContentView: View {
                                 .padding(.trailing)
                         }
                     }
-                    .onDelete(perform: { indexSet in
-                        deleteItems(offsets: indexSet)
-                    })
+//                    .onDelete(perform: { indexSet in
+//                        deleteItems(offsets: indexSet)
+//                    })
+                    .onDelete(perform: deleteRow)
+                    .alert(isPresented: self.$showingDeleteAlert, content: {
+                            Alert(title: Text("Delete this item?"), message: Text("Item will be deleted from your application."), primaryButton: .destructive(Text("Delete")) {
+                                if let selfToBeDeleted = self.toBeDeleted {
+                                    for index in selfToBeDeleted {
+                                        let item = items[index]
+                                        viewContext.delete(item)
+                                        do {
+                                            try viewContext.save()
+                                        } catch let error {
+                                            print("Error: \(error)")
+                                        }
+                                    }
+                                    self.toBeDeleted = nil
+                                }
+                            }, secondaryButton: .cancel() {
+                                self.toBeDeleted = nil
+                            }
+                    )})
                     .onTapGesture {
                         if (itemIsLongPressed) {
                             let newBool = false
@@ -92,22 +112,27 @@ struct ContentView: View {
                                         label: {
                                             Text("Add new item")
                                         }))
-
         }
     }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
+    
+    private func deleteRow(at indexSet: IndexSet) {
+        self.toBeDeleted = indexSet
+        self.showingDeleteAlert = true
     }
+    
+
+//    private func deleteItems(offsets: IndexSet) {
+//        withAnimation {
+//            offsets.map { items[$0] }.forEach(viewContext.delete)
+//
+//            do {
+//                try viewContext.save()
+//            } catch {
+//                let nsError = error as NSError
+//                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+//            }
+//        }
+//    }
 }
 
 struct ContentView_Previews: PreviewProvider {
