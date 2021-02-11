@@ -9,6 +9,9 @@ import SwiftUI
 
 struct FilterView: View {
     
+    @Environment(\.managedObjectContext) private var viewContext
+    // @EnvironmentObject var filter: Filter
+    
     @State var degreeIsChecked = false
     
     // FAKE FOR LAYOUT
@@ -29,7 +32,7 @@ struct FilterView: View {
         VStack {
             Form {
                 Section(header: Text("Degrees")) {
-                    Text("How many degrees will it be on your upcoming hike?")
+                    Text("How many degrees °C will it be on your upcoming hike?")
                         .font(.caption)
                     HStack {
                         Image(systemName: degreeIsChecked ? "xmark.square" : "square")

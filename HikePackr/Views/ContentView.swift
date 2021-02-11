@@ -52,9 +52,6 @@ struct ContentView: View {
                                 .padding(.trailing)
                         }
                     }
-//                    .onDelete(perform: { indexSet in
-//                        deleteItems(offsets: indexSet)
-//                    })
                     .onDelete(perform: deleteRow)
                     .alert(isPresented: self.$showingDeleteAlert, content: {
                             Alert(title: Text("Delete this item?"), message: Text("Item will be deleted from your application."), primaryButton: .destructive(Text("Delete")) {
@@ -73,7 +70,7 @@ struct ContentView: View {
                             }, secondaryButton: .cancel() {
                                 self.toBeDeleted = nil
                             }
-                    )})
+                            )})
                     .onTapGesture {
                         if (itemIsLongPressed) {
                             let newBool = false
@@ -89,11 +86,7 @@ struct ContentView: View {
                 Button(action: {
                     showPackedItemsView = true
                 }, label: {
-                    HStack {
-                        Text("Packed Items ( COUNT )")
-                        Image(systemName: "bag.fill")
-                        Image(systemName: "chevron.up")
-                    }
+                    PackedCountView()
                 })
                 .sheet(isPresented: $showPackedItemsView) {
                     PackedItemsView()
@@ -119,20 +112,6 @@ struct ContentView: View {
         self.toBeDeleted = indexSet
         self.showingDeleteAlert = true
     }
-    
-
-//    private func deleteItems(offsets: IndexSet) {
-//        withAnimation {
-//            offsets.map { items[$0] }.forEach(viewContext.delete)
-//
-//            do {
-//                try viewContext.save()
-//            } catch {
-//                let nsError = error as NSError
-//                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//            }
-//        }
-//    }
 }
 
 struct ContentView_Previews: PreviewProvider {

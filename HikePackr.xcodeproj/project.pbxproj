@@ -16,6 +16,7 @@
 		987BC10125D1B86C00C10D5D /* HikePackr.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 987BC0FF25D1B86C00C10D5D /* HikePackr.xcdatamodeld */; };
 		987BC10E25D1C2B500C10D5D /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BC10D25D1C2B500C10D5D /* FilterView.swift */; };
 		987BC11125D1C2E600C10D5D /* AddEditItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BC11025D1C2E600C10D5D /* AddEditItemView.swift */; };
+		98D34E9A25D5643D00814A80 /* PackedCountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D34E9925D5643D00814A80 /* PackedCountView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +32,7 @@
 		987BC10225D1B86C00C10D5D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		987BC10D25D1C2B500C10D5D /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
 		987BC11025D1C2E600C10D5D /* AddEditItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditItemView.swift; sourceTree = "<group>"; };
+		98D34E9925D5643D00814A80 /* PackedCountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackedCountView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 				987BC10D25D1C2B500C10D5D /* FilterView.swift */,
 				987BC11025D1C2E600C10D5D /* AddEditItemView.swift */,
 				985FF92D25D270E500BB8822 /* PackedItemsView.swift */,
+				98D34E9925D5643D00814A80 /* PackedCountView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -166,6 +169,7 @@
 				987BC11125D1C2E600C10D5D /* AddEditItemView.swift in Sources */,
 				987BC0FE25D1B86C00C10D5D /* Persistence.swift in Sources */,
 				987BC0F725D1B86A00C10D5D /* ContentView.swift in Sources */,
+				98D34E9A25D5643D00814A80 /* PackedCountView.swift in Sources */,
 				987BC10E25D1C2B500C10D5D /* FilterView.swift in Sources */,
 				985FF92E25D270E500BB8822 /* PackedItemsView.swift in Sources */,
 				987BC0F525D1B86A00C10D5D /* HikePackrApp.swift in Sources */,
