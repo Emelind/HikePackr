@@ -54,7 +54,7 @@ struct AddEditItemView: View {
                     }
                 }
                 Section(header: Text("Type of stay")) {
-                    Text("Will you use this item when you stay in a ... ?")
+                    Text("Will you use this item if you stay in a ... ?")
                         .font(.caption)
                     HStack {
                         Image(systemName: tentIsChecked ? "xmark.square" : "square")

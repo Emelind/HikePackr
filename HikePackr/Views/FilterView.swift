@@ -52,6 +52,24 @@ struct FilterView: View {
                 }
             }
         }
+        .toolbar(content: {
+            Button(action: {
+                resetFilters()
+            }, label: {
+                Text("Reset")
+            })
+        })
+    }
+    
+    private func resetFilters() {
+        filterSettings.degreeIsChecked = false
+        filterSettings.minDegree = 10
+        filterSettings.maxDegree = 20
+        filterSettings.tentIsChecked = false
+        filterSettings.cabinIsChecked = false
+        filterSettings.hotelIsChecked = false
+        filterSettings.numberOfDays = 1
+        
     }
 }
 

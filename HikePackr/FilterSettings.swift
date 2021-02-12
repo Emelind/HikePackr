@@ -48,8 +48,8 @@ class FilterSettings : ObservableObject {
     
     init() {
         self.degreeIsChecked = UserDefaults.standard.object(forKey: "degree") as? Bool ?? false
-        self.minDegree = UserDefaults.standard.object(forKey: "minDegree") as? Int ?? 0
-        self.maxDegree = UserDefaults.standard.object(forKey: "maxDegree") as? Int ?? 0
+        self.minDegree = UserDefaults.standard.object(forKey: "minDegree") as? Int ?? 10
+        self.maxDegree = UserDefaults.standard.object(forKey: "maxDegree") as? Int ?? 20
         self.tentIsChecked = UserDefaults.standard.object(forKey: "tent") as? Bool ?? false
         self.cabinIsChecked = UserDefaults.standard.object(forKey: "cabin") as? Bool ?? false
         self.hotelIsChecked = UserDefaults.standard.object(forKey: "hotel") as? Bool ?? false
