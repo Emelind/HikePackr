@@ -43,13 +43,9 @@ struct AddEditItemView: View {
                         .font(.caption)
                 }
                 Section(header: Text("Degrees")) {
-                    HStack {
-                        Image(systemName: degreeIsChecked ? "xmark.square" : "square")
-                            Text("Choose degree range")
-                    }
-                    .onTapGesture {
-                        degreeIsChecked.toggle()
-                    }
+                    Toggle(isOn: $degreeIsChecked, label: {
+                        Text("Add temperature filter")
+                    })
                     if (degreeIsChecked) {
                         HStack {
                             Text("\(Int(chosenDegree)) °C")
@@ -58,6 +54,8 @@ struct AddEditItemView: View {
                     }
                 }
                 Section(header: Text("Type of stay")) {
+                    Text("Will you use this item when you stay in a ... ?")
+                        .font(.caption)
                     HStack {
                         Image(systemName: tentIsChecked ? "xmark.square" : "square")
                         Text("Tent")
