@@ -9,39 +9,23 @@ import SwiftUI
 
 struct FilterView: View {
     
-    @Environment(\.managedObjectContext) private var viewContext
-    // @EnvironmentObject var filter: Filter
+    @Environment(\.presentationMode) var presentationMode
     
-    @State var degreeIsChecked = false
+    @ObservedObject var filterSettings = FilterSettings()
     
-    // FAKE FOR LAYOUT
-    @State var tentIsChecked = false
-    @State var cabinIsChecked = false
-    @State var hotelIsChecked = false
-    
-    // FAKE FOR LAYOUT
-    @State var numberOfDays = 1
-    
-    // FAKE FOR LAYOUT
+    // DEGREE SLIDER, WILL CHANGE
     @State var chosenDegree = 0.0
-//    @State var minDegree = -10
-//    @State var maxDegree = 30
    
     var body: some View {
-        
         VStack {
             Form {
                 Section(header: Text("Degrees")) {
                     Text("How many degrees °C will it be on your upcoming hike?")
                         .font(.caption)
-                    HStack {
-                        Image(systemName: degreeIsChecked ? "xmark.square" : "square")
-                            Text("Choose degree range")
+                    Toggle(isOn: $filterSettings.degreeIsChecked) {
+                        Text("Choose degree range")
                     }
-                    .onTapGesture {
-                        degreeIsChecked.toggle()
-                    }
-                    if (degreeIsChecked) {
+                    if (filterSettings.degreeIsChecked) {
                         HStack {
                             Text("\(Int(chosenDegree)) °C")
                             Slider(value: $chosenDegree, in: -10...30, step: 1)
@@ -51,40 +35,20 @@ struct FilterView: View {
                 Section(header: Text("Type of stay")) {
                     Text("What type of stay(s) have you planned?")
                         .font(.caption)
-                    HStack {
-                        Image(systemName: tentIsChecked ? "xmark.square" : "square")
+                    Toggle(isOn: $filterSettings.tentIsChecked) {
                         Text("Tent")
                     }
-                    .onTapGesture {
-                        tentIsChecked.toggle()
-                    }
-                    HStack {
-                        Image(systemName: cabinIsChecked ? "xmark.square" : "square")
+                    Toggle(isOn: $filterSettings.cabinIsChecked) {
                         Text("Cabin")
                     }
-                    .onTapGesture {
-                        cabinIsChecked.toggle()
-                    }
-                    HStack {
-                        Image(systemName: hotelIsChecked ? "xmark.square" : "square")
+                    Toggle(isOn: $filterSettings.hotelIsChecked) {
                         Text("Hotel")
-                    }
-                    .onTapGesture {
-                        hotelIsChecked.toggle()
                     }
                 }
                 Section(header: Text("Number of days")) {
                     Text("How many days will you hike?")
                         .font(.caption)
-                    Stepper("\(numberOfDays) day(s)", value: $numberOfDays, in: 1...10)
-                }
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        print("Apply")
-                    }, label: {
-                        Text("Apply")
-                })
+                    Stepper("\(filterSettings.numberOfDays) day(s)", value: $filterSettings.numberOfDays, in: 1...10)
                 }
             }
         }

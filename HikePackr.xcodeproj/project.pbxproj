@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		985FF92E25D270E500BB8822 /* PackedItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985FF92D25D270E500BB8822 /* PackedItemsView.swift */; };
+		98611B4225D6CEA60006EA39 /* FilterSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98611B4125D6CEA60006EA39 /* FilterSettings.swift */; };
 		987BC0F525D1B86A00C10D5D /* HikePackrApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BC0F425D1B86A00C10D5D /* HikePackrApp.swift */; };
 		987BC0F725D1B86A00C10D5D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BC0F625D1B86A00C10D5D /* ContentView.swift */; };
 		987BC0F925D1B86C00C10D5D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 987BC0F825D1B86C00C10D5D /* Assets.xcassets */; };
@@ -21,6 +22,7 @@
 
 /* Begin PBXFileReference section */
 		985FF92D25D270E500BB8822 /* PackedItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackedItemsView.swift; sourceTree = "<group>"; };
+		98611B4125D6CEA60006EA39 /* FilterSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettings.swift; sourceTree = "<group>"; };
 		9867249025D3CDE0003008AD /* HikePackr 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HikePackr 2.xcdatamodel"; sourceTree = "<group>"; };
 		987BC0F125D1B86A00C10D5D /* HikePackr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HikePackr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		987BC0F425D1B86A00C10D5D /* HikePackrApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HikePackrApp.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				987BC10225D1B86C00C10D5D /* Info.plist */,
 				987BC0FF25D1B86C00C10D5D /* HikePackr.xcdatamodeld */,
 				987BC0FA25D1B86C00C10D5D /* Preview Content */,
+				98611B4125D6CEA60006EA39 /* FilterSettings.swift */,
 			);
 			path = HikePackr;
 			sourceTree = "<group>";
@@ -165,6 +168,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98611B4225D6CEA60006EA39 /* FilterSettings.swift in Sources */,
 				987BC10125D1B86C00C10D5D /* HikePackr.xcdatamodeld in Sources */,
 				987BC11125D1C2E600C10D5D /* AddEditItemView.swift in Sources */,
 				987BC0FE25D1B86C00C10D5D /* Persistence.swift in Sources */,

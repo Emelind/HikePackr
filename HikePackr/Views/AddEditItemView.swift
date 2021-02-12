@@ -89,16 +89,17 @@ struct AddEditItemView: View {
                             Text(self.measurementOptions[$0]).tag($0)
                         }
                     }
-                    //Ändra nedan till att visa ALWAYS om perXNumberOfDays == 0 (< 1)
-                    Stepper("Every \(perXNumberOfDays) day(s)", value: $perXNumberOfDays, in: 0...10)
+                    Stepper(perXNumberOfDays == 0 ? "Always" : "Every \(perXNumberOfDays) day(s)", value: $perXNumberOfDays, in: 0...10)
                 }
-                Button(action: {
-                    addItem()
-                }, label: {
-                    Text("Save")
-                })
             }
         }
+        .toolbar(content: {
+            Button(action: {
+                addItem()
+            }, label: {
+                Text("Save")
+            })
+        })
     }
     
     private func addItem() {
@@ -116,8 +117,11 @@ struct AddEditItemView: View {
             newItem.measurement = measurementOptions[selectedMeasurementIndex]
             newItem.perXNumberOfDays = Int16(perXNumberOfDays)
             newItem.whenDegrees = degreeIsChecked
-            //min
-            //max
+            
+            // FAKE VALUES FOR TESTING PURPOSES. CHANGE WHEN MULTISLIDER IMPLEMENTED.
+            newItem.minDegree = 10
+            newItem.maxDegree = 20
+            
             // When no filter other than quantity is checked/changed, alwaysDisplayed is true, else false
             if(tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false && degreeIsChecked == false) {
                 newItem.alwaysDisplayed = true
@@ -127,10 +131,9 @@ struct AddEditItemView: View {
             newItem.category = ""
             newItem.isPacked = false
             
-            print("\(newItem)")
-            
             do {
                 try viewContext.save()
+                print("SAVED: \(newItem)")
                 presentationMode.wrappedValue.dismiss()
             } catch {
                 let nsError = error as NSError
