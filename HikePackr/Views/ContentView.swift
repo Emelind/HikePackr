@@ -12,12 +12,12 @@ struct ContentView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
+    @ObservedObject var filterSettings = FilterSettings()
+    @AppStorage("days") var numberOfDays : Int = 1
+    
     
     // fetch all items that are not packed. Will be changed to fetch items that fit in to the filter criteria selected in FilterView
     @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: "isPacked == false")) private var items: FetchedResults<Item>
-    
-    
-//    @FetchRequest(entity: Filter.entity(), sortDescriptors: []) private var filters: FetchedResults<Filter>
     
     // bool to track if item is long pressed to change name of navigation bar item
     @State var itemIsLongPressed = false
@@ -28,7 +28,8 @@ struct ContentView: View {
     // variabels for delete alert
     @State private var toBeDeleted: IndexSet?
     @State var showingDeleteAlert = false
-
+    
+    
     var body: some View {
         
         NavigationView {
@@ -36,9 +37,8 @@ struct ContentView: View {
                 List {
                     ForEach(items) { item in
                         HStack {
-                            // NEDAN SKA KALKYLERAS UTIFRÅN ANTAL DAGAR I FILTER
-                            Text(String(Int(item.quantity.rounded(.up))))
-                                .padding(.leading)
+                            //UPPDATERAS EJ SOM DEN SKA
+                            Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
                             if let measurement = item.measurement {
                                 Text(measurement)
                             }
@@ -104,7 +104,7 @@ struct ContentView: View {
             .listStyle(PlainListStyle())
             .navigationBarTitle("Things to pack", displayMode: .inline)
             .navigationBarItems(leading: NavigationLink(destination: FilterView(), label: {
-                    Text("Filter")
+                Image(systemName: "slider.horizontal.3")
             }), trailing: itemIsLongPressed ? NavigationLink(
                                         destination: AddEditItemView(),
                                         label: {
@@ -114,14 +114,20 @@ struct ContentView: View {
                                         label: {
                                             Image(systemName: "plus")
                                         }))
-            
-//            .navigationBarItems(trailing: NavigationLink(
-//                                    destination: JournalEntryView(),
-//                                    label: {
-//                                        Image(systemName: "plus.circle")
-//                                    }))
         } // end of list
     } // end of navigation view
+    
+    private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int16) -> Int {
+        if(perXNumberOfDays > 0) {
+            let quantityDouble = (itemQuantity / Double(perXNumberOfDays))
+            print(quantityDouble * Double(numberOfDays))
+            let perDayDouble = quantityDouble * Double(numberOfDays)
+            return Int(perDayDouble.rounded(.up))
+        } else {
+            print(Int(itemQuantity))
+            return Int(itemQuantity)
+        }
+    }
     
     private func deleteRow(at indexSet: IndexSet) {
         self.toBeDeleted = indexSet
