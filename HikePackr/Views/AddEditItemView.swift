@@ -12,6 +12,9 @@ struct AddEditItemView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.presentationMode) var presentationMode
     
+    // variable for filter toggle
+    @State var addFilters = false
+    
     // FAKE FOR LAYOUT
     @State var name: String = ""
     
@@ -38,56 +41,68 @@ struct AddEditItemView: View {
                     TextEditor(text: $name)
                 }
                 VStack {
-                    Text("Add filters?")
-                    Text("(Optional - If none is chosen, item is always shown)")
+                    HStack {
+                        Toggle(isOn: $addFilters, label: {
+                            Text("Add filters?")
+                        })
+                    }
+                    Text("If none is chosen, item is always shown")
                         .font(.caption)
                 }
-                Section(header: Text("Degrees")) {
-                    Toggle(isOn: $degreeIsChecked, label: {
-                        Text("Add temperature filter")
-                    })
-                    if (degreeIsChecked) {
+                if (addFilters) {
+                    Section(header: Text("Degrees")) {
+                        Toggle(isOn: $degreeIsChecked, label: {
+                            Text("Add temperature filter")
+                        })
+                        if (degreeIsChecked) {
+                            HStack {
+                                Text("\(Int(chosenDegree)) °C")
+                                Slider(value: $chosenDegree, in: -10...30, step: 1)
+                            }
+                        }
+                    }
+                    Section(header: Text("Type of stay")) {
+                        Text("Will you use this item if you stay in a ... ?")
+                            .font(.caption)
                         HStack {
-                            Text("\(Int(chosenDegree)) °C")
-                            Slider(value: $chosenDegree, in: -10...30, step: 1)
+                            Text("Tent")
+                            Spacer()
+                            Image(systemName: tentIsChecked ? "xmark.square" : "square")
+                            
+                        }
+                        .onTapGesture {
+                            tentIsChecked.toggle()
+                        }
+                        HStack {
+                            Text("Cabin")
+                            Spacer()
+                            Image(systemName: cabinIsChecked ? "xmark.square" : "square")
+                            
+                        }
+                        .onTapGesture {
+                            cabinIsChecked.toggle()
+                        }
+                        HStack {
+                            Text("Hotel")
+                            Spacer()
+                            Image(systemName: hotelIsChecked ? "xmark.square" : "square")
+                            
+                        }
+                        .onTapGesture {
+                            hotelIsChecked.toggle()
                         }
                     }
-                }
-                Section(header: Text("Type of stay")) {
-                    Text("Will you use this item if you stay in a ... ?")
-                        .font(.caption)
-                    HStack {
-                        Image(systemName: tentIsChecked ? "xmark.square" : "square")
-                        Text("Tent")
-                    }
-                    .onTapGesture {
-                        tentIsChecked.toggle()
-                    }
-                    HStack {
-                        Image(systemName: cabinIsChecked ? "xmark.square" : "square")
-                        Text("Cabin")
-                    }
-                    .onTapGesture {
-                        cabinIsChecked.toggle()
-                    }
-                    HStack {
-                        Image(systemName: hotelIsChecked ? "xmark.square" : "square")
-                        Text("Hotel")
-                    }
-                    .onTapGesture {
-                        hotelIsChecked.toggle()
-                    }
-                }
-                Section(header: Text("Quantity")) {
-                    Text("If below filter is not actively modified, default number is 1 pcs dependless of number of days")
-                        .font(.caption)
-                    Stepper("Quantity: \(quantity)", value: $quantity, in: 1...10)
-                    Picker(selection: $selectedMeasurementIndex, label: Text("Means of measurement")) {
-                        ForEach(0 ..< measurementOptions.count) {
-                            Text(self.measurementOptions[$0]).tag($0)
+                    Section(header: Text("Quantity")) {
+                        Text("If below filter is not actively modified, default number is 1 pcs dependless of number of days")
+                            .font(.caption)
+                        Stepper("Quantity: \(quantity)", value: $quantity, in: 1...10)
+                        Picker(selection: $selectedMeasurementIndex, label: Text("Means of measurement")) {
+                            ForEach(0 ..< measurementOptions.count) {
+                                Text(self.measurementOptions[$0]).tag($0)
+                            }
                         }
+                        Stepper(perXNumberOfDays == 0 ? "Always" : "Every \(perXNumberOfDays) day(s)", value: $perXNumberOfDays, in: 0...10)
                     }
-                    Stepper(perXNumberOfDays == 0 ? "Always" : "Every \(perXNumberOfDays) day(s)", value: $perXNumberOfDays, in: 0...10)
                 }
             }
         }

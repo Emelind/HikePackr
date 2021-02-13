@@ -13,6 +13,8 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     @ObservedObject var filterSettings = FilterSettings()
+    
+    // track changes in user default, days, for updating item quantity text
     @AppStorage("days") var numberOfDays : Int = 1
     
     
@@ -91,7 +93,7 @@ struct ContentView: View {
                         itemIsLongPressed = true
                         // MARKERA SOM PRESSED
                     }
-                }
+                } // end of list
                 Button(action: {
                     showPackedItemsView = true
                 }, label: {
@@ -127,7 +129,7 @@ struct ContentView: View {
             print(Int(itemQuantity))
             return Int(itemQuantity)
         }
-    }
+    } // end of calculateQuantity func
     
     private func deleteRow(at indexSet: IndexSet) {
         self.toBeDeleted = indexSet
