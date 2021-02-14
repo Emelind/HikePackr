@@ -19,7 +19,7 @@ struct ContentView: View {
     
     
     // fetch all items that are not packed. Will be changed to fetch items that fit in to the filter criteria selected in FilterView
-    @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: "isPacked == false")) private var items: FetchedResults<Item>
+    @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: /*"alwaysDisplayed == true",*/ "isPacked == false")) private var items: FetchedResults<Item>
     
     // bool to track if item is long pressed to change name of navigation bar item
     @State var itemIsLongPressed = false
@@ -39,7 +39,7 @@ struct ContentView: View {
                 List {
                     ForEach(items) { item in
                         HStack {
-                            //UPPDATERAS EJ SOM DEN SKA
+                            // call function calculateQuantity to get quantity based on number of days chosen in filter
                             Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
                             if let measurement = item.measurement {
                                 Text(measurement)
@@ -119,18 +119,19 @@ struct ContentView: View {
         } // end of list
     } // end of navigation view
     
+    
+    // function to get the item quantity based on number of days chosen in filter
     private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int16) -> Int {
         if(perXNumberOfDays > 0) {
             let quantityDouble = (itemQuantity / Double(perXNumberOfDays))
-            print(quantityDouble * Double(numberOfDays))
             let perDayDouble = quantityDouble * Double(numberOfDays)
             return Int(perDayDouble.rounded(.up))
         } else {
-            print(Int(itemQuantity))
             return Int(itemQuantity)
         }
-    } // end of calculateQuantity func
+    }
     
+    // function to delete row / show alert
     private func deleteRow(at indexSet: IndexSet) {
         self.toBeDeleted = indexSet
         self.showingDeleteAlert = true

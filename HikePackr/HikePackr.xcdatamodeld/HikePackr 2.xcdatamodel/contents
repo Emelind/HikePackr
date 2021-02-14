@@ -23,9 +23,10 @@
         <attribute name="whenDegrees" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="whenHotel" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="whenTent" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="whenTypeOfStay" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
     </entity>
     <elements>
         <element name="Filter" positionX="-63" positionY="90" width="128" height="134"/>
-        <element name="Item" positionX="-63" positionY="-18" width="128" height="238"/>
+        <element name="Item" positionX="-63" positionY="-18" width="128" height="239"/>
     </elements>
 </model>

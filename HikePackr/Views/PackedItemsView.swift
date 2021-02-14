@@ -15,13 +15,15 @@ struct PackedItemsView: View {
     
     private var items: FetchedResults<Item>
     
+    // track changes in user default, days, for updating item quantity text
+    @AppStorage("days") var numberOfDays : Int = 1
+    
     var body: some View {
         NavigationView {
             List {
                 ForEach(items) { item in
                     HStack {
-                        // NEDAN SKA KALKYLERAS UTIFRÅN ANTAL DAGAR I FILTER
-                        Text(String(Int(item.quantity.rounded(.up))))
+                        Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
                             .padding(.leading)
                         if let measurement = item.measurement {
                             Text(measurement)
@@ -44,6 +46,17 @@ struct PackedItemsView: View {
                     }
                 }
             }
+        }
+    }
+    
+    // function to get the item quantity based on number of days chosen in filter
+    private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int16) -> Int {
+        if(perXNumberOfDays > 0) {
+            let quantityDouble = (itemQuantity / Double(perXNumberOfDays))
+            let perDayDouble = quantityDouble * Double(numberOfDays)
+            return Int(perDayDouble.rounded(.up))
+        } else {
+            return Int(itemQuantity)
         }
     }
 }

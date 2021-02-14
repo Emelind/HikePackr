@@ -134,6 +134,11 @@ struct AddEditItemView: View {
             // FAKE VALUES FOR TESTING PURPOSES. CHANGE WHEN MULTISLIDER IMPLEMENTED.
             newItem.minDegree = 10
             newItem.maxDegree = 20
+            if (tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false) {
+                newItem.whenTypeOfStay = false
+            } else {
+                newItem.whenTypeOfStay = true
+            }
             
             // When no filter other than quantity is checked/changed, alwaysDisplayed is true, else false
             if(tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false && degreeIsChecked == false) {
