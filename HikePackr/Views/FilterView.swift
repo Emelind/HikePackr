@@ -88,33 +88,3 @@ struct FilterView_Previews: PreviewProvider {
         FilterView()
     }
 }
-
-/*
- 1. INGA FILTER
- ** all items
- ** except item.isPacked == true
- 
- 2. BARA DEGREE, EJ STAY
- ** item.whenDegree == true  && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
- ** item.whenDegree == false && item.whenTypeOfStay == true
- ** item.alwaysDisplayed == true
- ** except item.isPacked == true
- 
- 3. BARA STAY, EJ DEGREE
- ** item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
- ** item.whenTypeOfStay == false && item.whenDegree == true
- ** item.alwaysDisplayed == true
- ** except item.isPacked == true
- 
- 4. COMBO - DEGREE + STAY
- ** item.whenDegree == true && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
-        &&
-    item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
- ** item.whenDegree == true && tem.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
-        &&
-    item.whenTypeOfStay == false
- ** item.whenDegree == false
-        &&
-    item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
- ** except item.isPacked == true
- */

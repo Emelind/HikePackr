@@ -152,13 +152,111 @@ struct ContentView: View {
     
     // function to get a filtered list according to filter settings
     private func filterItems() -> [Item] {
-        var theseItems: [Item]
-        if (tentIsChecked) {
-             theseItems = items.filter { item in
-                (item.whenTent)
+        var filteredItems: [Item]
+        
+        // if no filters hace been chosen, display all except packed items
+        if(!degreeIsChecked && !tentIsChecked && !cabinIsChecked && !hotelIsChecked) {
+            filteredItems = items.filter { item in
+                (!item.isPacked)
             }
-            return theseItems
+            return filteredItems
+            
+            // only degrees - have to add function to check min-max range!!
+        } else if (degreeIsChecked && !tentIsChecked && !cabinIsChecked && !hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenDegrees && !item.isPacked)
+                    || (!item.whenDegrees && item.whenTypeOfStay && !item.isPacked)
+                    || (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            // only tent
+        } else if (!degreeIsChecked && tentIsChecked && !cabinIsChecked && !hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenTent && !item.isPacked) ||
+                    (!item.whenTypeOfStay && item.whenDegrees && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+        
+            // only cabin
+        } else if (!degreeIsChecked && !tentIsChecked && cabinIsChecked && !hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenCabin && !item.isPacked) ||
+                    (!item.whenTypeOfStay && item.whenDegrees && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            //only hotel
+        } else if (!degreeIsChecked && !tentIsChecked && !cabinIsChecked && hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenHotel && !item.isPacked) ||
+                    (!item.whenTypeOfStay && item.whenDegrees && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            // tent + cabin
+        } else if (!degreeIsChecked && tentIsChecked && cabinIsChecked && !hotelIsChecked) {
+            filteredItems = items.filter { item in
+                (((item.whenHotel || item.whenCabin) && !item.isPacked) ||
+                    (!item.whenTypeOfStay && item.whenDegrees && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            // tent + hotel
+        } else if (!degreeIsChecked && tentIsChecked && !cabinIsChecked && hotelIsChecked) {
+            filteredItems = items.filter { item in
+                (((item.whenTent || item.whenHotel) && !item.isPacked) ||
+                    (!item.whenTypeOfStay && item.whenDegrees && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+        
+            // cabin + hotel
+        } else if (!degreeIsChecked && !tentIsChecked && cabinIsChecked && hotelIsChecked) {
+            filteredItems = items.filter { item in
+                (((item.whenCabin || item.whenHotel) && !item.isPacked) ||
+                    (!item.whenTypeOfStay && item.whenDegrees && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            // tent + cabin + hotel
+        } else if (!degreeIsChecked && tentIsChecked && cabinIsChecked && hotelIsChecked) {
+            filteredItems = items.filter { item in
+                (((item.whenTent || item.whenCabin || item.whenHotel) && !item.isPacked) ||
+                    (!item.whenTypeOfStay && item.whenDegrees && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
         }
+        
+        
+        
+        // degree + tent
+        // degree + cabin
+        // degree + hotel
+        // degree + tent + cabin
+        // degree + tent + hotel
+        // degree + tent + hotel
+        // degree + tent + cabin + hotel
+        
+        
+//        4. COMBO - DEGREE + STAY
+//        ** item.whenDegree == true && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
+//               &&
+//           item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
+//        ** item.whenDegree == true && tem.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
+//               &&
+//           item.whenTypeOfStay == false
+//        ** item.whenDegree == false
+//               &&
+//           item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
+//        ** except item.isPacked == true
+        
         return [Item]()
     }
 } // end of view
@@ -169,3 +267,33 @@ struct ContentView_Previews: PreviewProvider {
             //.colorScheme(.dark)
     }
 }
+
+/*
+ 1. INGA FILTER
+ ** all items
+ ** except item.isPacked == true
+ 
+ 2. BARA DEGREE, EJ STAY
+ ** item.whenDegree == true  && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
+ ** item.whenDegree == false && item.whenTypeOfStay == true
+ ** item.alwaysDisplayed == true
+ ** except item.isPacked == true
+ 
+ 3. BARA STAY, EJ DEGREE
+ ** item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
+ ** item.whenTypeOfStay == false && item.whenDegree == true
+ ** item.alwaysDisplayed == true
+ ** except item.isPacked == true
+ 
+ 4. COMBO - DEGREE + STAY
+ ** item.whenDegree == true && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
+        &&
+    item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
+ ** item.whenDegree == true && tem.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
+        &&
+    item.whenTypeOfStay == false
+ ** item.whenDegree == false
+        &&
+    item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
+ ** except item.isPacked == true
+ */
