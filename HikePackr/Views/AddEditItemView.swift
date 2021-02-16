@@ -128,7 +128,7 @@ struct AddEditItemView: View {
             newItem.whenHotel = hotelIsChecked
             newItem.quantity = Double(quantity)
             newItem.measurement = measurementOptions[selectedMeasurementIndex]
-            newItem.perXNumberOfDays = Int16(perXNumberOfDays)
+            newItem.perXNumberOfDays = Int64(perXNumberOfDays)
             newItem.whenDegrees = degreeIsChecked
             
             // FAKE VALUES FOR TESTING PURPOSES. CHANGE WHEN MULTISLIDER IMPLEMENTED.
@@ -157,7 +157,17 @@ struct AddEditItemView: View {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
-        }
+        } // end of addItem function
+        
+//        for save function when editing - use:
+//        if viewContext.hasChanges {
+//            do {
+//                try viewContext.save()
+//            } catch {
+//                let nsError = error as NSError
+//                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+//            }
+//        }
     }
 }
 

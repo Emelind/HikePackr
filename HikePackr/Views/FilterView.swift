@@ -9,27 +9,37 @@ import SwiftUI
 
 struct FilterView: View {
     
+    //TEST SLIDER
+    @ObservedObject var slider = CustomSlider(start: -10, end: 30)
+    
     @Environment(\.presentationMode) var presentationMode
     
     @ObservedObject var filterSettings = FilterSettings()
-    
-    // DEGREE SLIDER, WILL CHANGE
-    @State var chosenDegree = 0.0
    
     var body: some View {
         VStack {
             Form {
                 Section(header: Text("Degrees")) {
+                    
                     Text("How many degrees °C will it be on your upcoming hike?")
                         .font(.caption)
                     Toggle(isOn: $filterSettings.degreeIsChecked) {
                         Text("Choose degree range")
                     }
                     if (filterSettings.degreeIsChecked) {
-                        HStack {
-                            Text("\(Int(chosenDegree)) °C")
-                            Slider(value: $chosenDegree, in: -10...30, step: 1)
-                        }
+                        // TEST SLIDER
+                        VStack {
+                            //Text("Value: " + slider.valueBetween)
+                            //Text("Percentages: " + slider.percentagesBetween)
+                            HStack {
+                                Text("From: \(Int(slider.lowHandle.currentValue)) °C")
+                                Spacer()
+                                Text("To: \(Int(slider.highHandle.currentValue)) °C")
+                            }
+                            //Slider
+                            SliderView(slider: slider)
+                                .padding(.bottom)
+                        } // END TEST SLIDER
                     }
                 }
                 Section(header: Text("Type of stay")) {
@@ -78,3 +88,33 @@ struct FilterView_Previews: PreviewProvider {
         FilterView()
     }
 }
+
+/*
+ 1. INGA FILTER
+ ** all items
+ ** except item.isPacked == true
+ 
+ 2. BARA DEGREE, EJ STAY
+ ** item.whenDegree == true  && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
+ ** item.whenDegree == false && item.whenTypeOfStay == true
+ ** item.alwaysDisplayed == true
+ ** except item.isPacked == true
+ 
+ 3. BARA STAY, EJ DEGREE
+ ** item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
+ ** item.whenTypeOfStay == false && item.whenDegree == true
+ ** item.alwaysDisplayed == true
+ ** except item.isPacked == true
+ 
+ 4. COMBO - DEGREE + STAY
+ ** item.whenDegree == true && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
+        &&
+    item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
+ ** item.whenDegree == true && tem.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
+        &&
+    item.whenTypeOfStay == false
+ ** item.whenDegree == false
+        &&
+    item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
+ ** except item.isPacked == true
+ */

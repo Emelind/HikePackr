@@ -50,7 +50,7 @@ struct PackedItemsView: View {
     }
     
     // function to get the item quantity based on number of days chosen in filter
-    private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int16) -> Int {
+    private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int64) -> Int {
         if(perXNumberOfDays > 0) {
             let quantityDouble = (itemQuantity / Double(perXNumberOfDays))
             let perDayDouble = quantityDouble * Double(numberOfDays)

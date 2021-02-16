@@ -12,14 +12,27 @@ struct ContentView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
-    @ObservedObject var filterSettings = FilterSettings()
+    //@ObservedObject var filterSettings = FilterSettings()
     
-    // track changes in user default, days, for updating item quantity text
+    // tracking changes in user defaults, used in filterItems function and calculate quantity
+    @AppStorage("degree") var degreeIsChecked : Bool = false
+    @AppStorage("minDegree") var minDegree : Int = 10
+    @AppStorage("maxDegree") var maxDegree : Int = 20
+    
+    @AppStorage("tent") var tentIsChecked: Bool = false
+    @AppStorage("cabin") var cabinIsChecked: Bool = false
+    @AppStorage("hotel") var hotelIsChecked: Bool = false
+    
     @AppStorage("days") var numberOfDays : Int = 1
     
+    // fetch all items
+    @FetchRequest(entity: Item.entity(), sortDescriptors: [], animation: .default)
+    private var items: FetchedResults<Item>
     
-    // fetch all items that are not packed. Will be changed to fetch items that fit in to the filter criteria selected in FilterView
-    @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: /*"alwaysDisplayed == true",*/ "isPacked == false")) private var items: FetchedResults<Item>
+    // call function to filter list according to filter settings
+    var filteredList: [Item] {
+        filterItems()
+    }
     
     // bool to track if item is long pressed to change name of navigation bar item
     @State var itemIsLongPressed = false
@@ -37,7 +50,7 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 List {
-                    ForEach(items) { item in
+                    ForEach(filteredList) { item in
                         HStack {
                             // call function calculateQuantity to get quantity based on number of days chosen in filter
                             Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
@@ -61,7 +74,7 @@ struct ContentView: View {
                                     }
                                 }
                                 .padding(.trailing)
-                        }
+                        } // end of HStack
                     } // end of ForEach
                     .onDelete(perform: deleteRow)
                     .alert(isPresented: self.$showingDeleteAlert, content: {
@@ -121,7 +134,7 @@ struct ContentView: View {
     
     
     // function to get the item quantity based on number of days chosen in filter
-    private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int16) -> Int {
+    private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int64) -> Int {
         if(perXNumberOfDays > 0) {
             let quantityDouble = (itemQuantity / Double(perXNumberOfDays))
             let perDayDouble = quantityDouble * Double(numberOfDays)
@@ -137,10 +150,22 @@ struct ContentView: View {
         self.showingDeleteAlert = true
     }
     
+    // function to get a filtered list according to filter settings
+    private func filterItems() -> [Item] {
+        var theseItems: [Item]
+        if (tentIsChecked) {
+             theseItems = items.filter { item in
+                (item.whenTent)
+            }
+            return theseItems
+        }
+        return [Item]()
+    }
 } // end of view
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            //.colorScheme(.dark)
     }
 }
