@@ -232,31 +232,77 @@ struct ContentView: View {
                     (item.alwaysDisplayed && !item.isPacked))
             }
             return filteredItems
+            
+            // degrees + tent
+        } else if (degreeIsChecked && tentIsChecked && !cabinIsChecked && !hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenDegrees && item.whenTent && !item.isPacked) ||
+                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                    (!item.whenDegrees && item.whenTent && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            // degrees + cabin
+        } else if (degreeIsChecked && !tentIsChecked && cabinIsChecked && !hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenDegrees && item.whenCabin && !item.isPacked) ||
+                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                    (!item.whenDegrees && item.whenCabin && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            // degrees + hotel
+        } else if (degreeIsChecked && !tentIsChecked && !cabinIsChecked && hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenDegrees && item.whenHotel && !item.isPacked) ||
+                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                    (!item.whenDegrees && item.whenHotel && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            // degree + tent + cabin
+        } else if (degreeIsChecked && tentIsChecked && cabinIsChecked && !hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenDegrees && (item.whenTent || item.whenCabin) && !item.isPacked) ||
+                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                    (!item.whenDegrees && (item.whenTent || item.whenCabin) && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            //degree + tent + hotel
+        } else if (degreeIsChecked && tentIsChecked && !cabinIsChecked && hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenDegrees && (item.whenTent || item.whenHotel) && !item.isPacked) ||
+                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                    (!item.whenDegrees && (item.whenTent || item.whenHotel) && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            // degree + cabin + hotel
+        } else if (degreeIsChecked && !tentIsChecked && cabinIsChecked && hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenDegrees && (item.whenCabin || item.whenHotel) && !item.isPacked) ||
+                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                    (!item.whenDegrees && (item.whenCabin || item.whenHotel) && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
+            
+            //degree + tent + cabin + hotel
+        } else if (degreeIsChecked && tentIsChecked && cabinIsChecked && hotelIsChecked) {
+            filteredItems = items.filter { item in
+                ((item.whenDegrees && (item.whenTent || item.whenCabin || item.whenHotel) && !item.isPacked) ||
+                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                    (!item.whenDegrees && (item.whenTent || item.whenCabin || item.whenHotel) && !item.isPacked) ||
+                    (item.alwaysDisplayed && !item.isPacked))
+            }
+            return filteredItems
         }
-        
-        
-        
-        // degree + tent
-        // degree + cabin
-        // degree + hotel
-        // degree + tent + cabin
-        // degree + tent + hotel
-        // degree + tent + hotel
-        // degree + tent + cabin + hotel
-        
-        
-//        4. COMBO - DEGREE + STAY
-//        ** item.whenDegree == true && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
-//               &&
-//           item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
-//        ** item.whenDegree == true && tem.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
-//               &&
-//           item.whenTypeOfStay == false
-//        ** item.whenDegree == false
-//               &&
-//           item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
-//        ** except item.isPacked == true
-        
         return [Item]()
     }
 } // end of view
@@ -296,4 +342,6 @@ struct ContentView_Previews: PreviewProvider {
         &&
     item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
  ** except item.isPacked == true
+ 
+ ** alwaysDisplayed == true
  */
