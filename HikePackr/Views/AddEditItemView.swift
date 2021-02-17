@@ -20,7 +20,11 @@ struct AddEditItemView: View {
     
     // FAKE FOR LAYOUT
     @State var degreeIsChecked = false
-    @State var chosenDegree = 0.0
+    @State var minDegree = 10
+    @State var maxDegree = 15
+    
+    var minDegrees = [Int](0...30)
+    var maxDegrees = [Int](0...30)
     
     // FAKE FOR LAYOUT
     @State var tentIsChecked = false
@@ -55,10 +59,16 @@ struct AddEditItemView: View {
                             Text("Add temperature filter")
                         })
                         if (degreeIsChecked) {
-                            HStack {
-                                Text("\(Int(chosenDegree)) °C")
-                                Slider(value: $chosenDegree, in: -10...30, step: 1)
-                            }
+                            Picker(selection: $minDegree, label: Text("From:"), content: {
+                                ForEach(0..<minDegrees.count) { index in
+                                    Text("\(minDegrees[index]) °C").tag(index)
+                                }
+                            })
+                            Picker(selection: $maxDegree, label: Text("To:"), content: {
+                                ForEach(0..<maxDegrees.count) { index in
+                                    Text("\(maxDegrees[index]) °C").tag(index)
+                                }
+                            })
                         }
                     }
                     Section(header: Text("Type of stay")) {
@@ -132,8 +142,8 @@ struct AddEditItemView: View {
             newItem.whenDegrees = degreeIsChecked
             
             // FAKE VALUES FOR TESTING PURPOSES. CHANGE WHEN MULTISLIDER IMPLEMENTED.
-            newItem.minDegree = 10
-            newItem.maxDegree = 20
+            newItem.minDegree = Int64(minDegree)
+            newItem.maxDegree = Int64(maxDegree)
             if (tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false) {
                 newItem.whenTypeOfStay = false
             } else {
@@ -152,6 +162,7 @@ struct AddEditItemView: View {
             do {
                 try viewContext.save()
                 presentationMode.wrappedValue.dismiss()
+                print(newItem)
             } catch {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")

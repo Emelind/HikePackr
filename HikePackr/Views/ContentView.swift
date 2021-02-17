@@ -32,15 +32,17 @@ struct ContentView: View {
         filterItems()
     }
     
+    private var degreesMatch = false
+    
     // bool to track if item is long pressed to change name of navigation bar item
-    @State var itemIsLongPressed = false
+    @State private var itemIsLongPressed = false
     
     // bool for sheet
-    @State var showPackedItemsView = false
+    @State private var showPackedItemsView = false
     
     // variabels for delete alert
     @State private var toBeDeleted: IndexSet?
-    @State var showingDeleteAlert = false
+    @State private var showingDeleteAlert = false
     
     
     var body: some View {
@@ -162,7 +164,7 @@ struct ContentView: View {
             // only degrees - have to add function to check min-max range!!
         } else if (degreeIsChecked && !tentIsChecked && !cabinIsChecked && !hotelIsChecked) {
             filteredItems = items.filter { item in
-                ((item.whenDegrees && !item.isPacked)
+                ((item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && !item.isPacked)
                     || (!item.whenDegrees && item.whenTypeOfStay && !item.isPacked)
                     || (item.alwaysDisplayed && !item.isPacked))
             }
@@ -234,8 +236,8 @@ struct ContentView: View {
             // degrees + tent
         } else if (degreeIsChecked && tentIsChecked && !cabinIsChecked && !hotelIsChecked) {
             filteredItems = items.filter { item in
-                ((item.whenDegrees && item.whenTent && !item.isPacked) ||
-                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                ((item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && item.whenTent && !item.isPacked) ||
+                    (item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && !item.whenTypeOfStay && !item.isPacked) ||
                     (!item.whenDegrees && item.whenTent && !item.isPacked) ||
                     (item.alwaysDisplayed && !item.isPacked))
             }
@@ -244,8 +246,8 @@ struct ContentView: View {
             // degrees + cabin
         } else if (degreeIsChecked && !tentIsChecked && cabinIsChecked && !hotelIsChecked) {
             filteredItems = items.filter { item in
-                ((item.whenDegrees && item.whenCabin && !item.isPacked) ||
-                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                ((item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && item.whenCabin && !item.isPacked) ||
+                    (item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && !item.whenTypeOfStay && !item.isPacked) ||
                     (!item.whenDegrees && item.whenCabin && !item.isPacked) ||
                     (item.alwaysDisplayed && !item.isPacked))
             }
@@ -254,8 +256,8 @@ struct ContentView: View {
             // degrees + hotel
         } else if (degreeIsChecked && !tentIsChecked && !cabinIsChecked && hotelIsChecked) {
             filteredItems = items.filter { item in
-                ((item.whenDegrees && item.whenHotel && !item.isPacked) ||
-                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                ((item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && item.whenHotel && !item.isPacked) ||
+                    (item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && !item.whenTypeOfStay && !item.isPacked) ||
                     (!item.whenDegrees && item.whenHotel && !item.isPacked) ||
                     (item.alwaysDisplayed && !item.isPacked))
             }
@@ -264,8 +266,8 @@ struct ContentView: View {
             // degree + tent + cabin
         } else if (degreeIsChecked && tentIsChecked && cabinIsChecked && !hotelIsChecked) {
             filteredItems = items.filter { item in
-                ((item.whenDegrees && (item.whenTent || item.whenCabin) && !item.isPacked) ||
-                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                ((item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && (item.whenTent || item.whenCabin) && !item.isPacked) ||
+                    (item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && !item.whenTypeOfStay && !item.isPacked) ||
                     (!item.whenDegrees && (item.whenTent || item.whenCabin) && !item.isPacked) ||
                     (item.alwaysDisplayed && !item.isPacked))
             }
@@ -274,8 +276,8 @@ struct ContentView: View {
             //degree + tent + hotel
         } else if (degreeIsChecked && tentIsChecked && !cabinIsChecked && hotelIsChecked) {
             filteredItems = items.filter { item in
-                ((item.whenDegrees && (item.whenTent || item.whenHotel) && !item.isPacked) ||
-                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                ((item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && (item.whenTent || item.whenHotel) && !item.isPacked) ||
+                    (item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && !item.whenTypeOfStay && !item.isPacked) ||
                     (!item.whenDegrees && (item.whenTent || item.whenHotel) && !item.isPacked) ||
                     (item.alwaysDisplayed && !item.isPacked))
             }
@@ -284,8 +286,8 @@ struct ContentView: View {
             // degree + cabin + hotel
         } else if (degreeIsChecked && !tentIsChecked && cabinIsChecked && hotelIsChecked) {
             filteredItems = items.filter { item in
-                ((item.whenDegrees && (item.whenCabin || item.whenHotel) && !item.isPacked) ||
-                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                ((item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && (item.whenCabin || item.whenHotel) && !item.isPacked) ||
+                    (item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && !item.whenTypeOfStay && !item.isPacked) ||
                     (!item.whenDegrees && (item.whenCabin || item.whenHotel) && !item.isPacked) ||
                     (item.alwaysDisplayed && !item.isPacked))
             }
@@ -294,15 +296,28 @@ struct ContentView: View {
             //degree + tent + cabin + hotel
         } else if (degreeIsChecked && tentIsChecked && cabinIsChecked && hotelIsChecked) {
             filteredItems = items.filter { item in
-                ((item.whenDegrees && (item.whenTent || item.whenCabin || item.whenHotel) && !item.isPacked) ||
-                    (item.whenDegrees && !item.whenTypeOfStay && !item.isPacked) ||
+                ((item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && (item.whenTent || item.whenCabin || item.whenHotel) && !item.isPacked) ||
+                    (item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && !item.whenTypeOfStay && !item.isPacked) ||
                     (!item.whenDegrees && (item.whenTent || item.whenCabin || item.whenHotel) && !item.isPacked) ||
                     (item.alwaysDisplayed && !item.isPacked))
             }
             return filteredItems
         }
         return [Item]()
+    } // end of filterItems function
+    
+    private func checkTemp(itemMin: Int64, itemMax: Int64) -> Bool {
+        for itemDegree in itemMin...itemMax {
+            for filterDegree in minDegree...maxDegree {
+                if itemDegree == filterDegree {
+                    return true
+                }
+            }
+        }
+        return false
+        
     }
+    
 } // end of view
 
 struct ContentView_Previews: PreviewProvider {
@@ -342,4 +357,19 @@ struct ContentView_Previews: PreviewProvider {
  ** except item.isPacked == true
  
  ** alwaysDisplayed == true
+ */
+
+
+/*
+ 
+ filter degrees 10...15
+ itemdegreerange item.min..item.max = 10...15
+ 
+ for number in itemdegreerange
+ 
+        for filternumber in filterrange
+            if number == filter number
+        return true
+ 
+        else return false
  */
