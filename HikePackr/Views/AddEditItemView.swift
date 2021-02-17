@@ -151,7 +151,6 @@ struct AddEditItemView: View {
             
             do {
                 try viewContext.save()
-                print("SAVED: \(newItem)")
                 presentationMode.wrappedValue.dismiss()
             } catch {
                 let nsError = error as NSError

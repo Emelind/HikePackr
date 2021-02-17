@@ -56,7 +56,7 @@ struct FilterView: View {
                     }
                 }
                 Section(header: Text("Number of days")) {
-                    Text("How many days will you hike?")
+                    Text("For how many days will you hike?")
                         .font(.caption)
                     Stepper("\(filterSettings.numberOfDays) day(s)", value: $filterSettings.numberOfDays, in: 1...10)
                 }

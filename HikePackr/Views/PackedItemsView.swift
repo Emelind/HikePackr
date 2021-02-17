@@ -11,8 +11,9 @@ struct PackedItemsView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
-    @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: "isPacked == true"))
+    @Environment(\.presentationMode) var presentationMode
     
+    @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: "isPacked == true"))
     private var items: FetchedResults<Item>
     
     // track changes in user default, days, for updating item quantity text
@@ -44,7 +45,12 @@ struct PackedItemsView: View {
                             }
                             .padding(.trailing)
                     }
-                }
+                } // end of ForEach
+                Button(action: {
+                    clearAll()
+                }, label: {
+                    Text("Empty bag")
+                })
             }
         }
     }
@@ -57,6 +63,24 @@ struct PackedItemsView: View {
             return Int(perDayDouble.rounded(.up))
         } else {
             return Int(itemQuantity)
+        }
+    }
+    
+    // clear all items from packed items view
+    private func clearAll() {
+        for item in items {
+            if (item.isPacked) {
+                item.isPacked.toggle()
+            }
+        }
+        if viewContext.hasChanges {
+            do {
+                try viewContext.save()
+                // presentationMode.wrappedValue.dismiss()
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
         }
     }
 }

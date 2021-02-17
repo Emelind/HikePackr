@@ -12,8 +12,6 @@ struct ContentView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
     
-    //@ObservedObject var filterSettings = FilterSettings()
-    
     // tracking changes in user defaults, used in filterItems function and calculate quantity
     @AppStorage("degree") var degreeIsChecked : Bool = false
     @AppStorage("minDegree") var minDegree : Int = 10
@@ -200,7 +198,7 @@ struct ContentView: View {
             // tent + cabin
         } else if (!degreeIsChecked && tentIsChecked && cabinIsChecked && !hotelIsChecked) {
             filteredItems = items.filter { item in
-                (((item.whenHotel || item.whenCabin) && !item.isPacked) ||
+                (((item.whenTent || item.whenCabin) && !item.isPacked) ||
                     (!item.whenTypeOfStay && item.whenDegrees && !item.isPacked) ||
                     (item.alwaysDisplayed && !item.isPacked))
             }
