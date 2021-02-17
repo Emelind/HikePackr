@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AddEditItemView: View {
     
+    @State var item: Item? = nil
+    
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.presentationMode) var presentationMode
     
@@ -114,7 +116,10 @@ struct AddEditItemView: View {
                         Stepper(perXNumberOfDays == 0 ? "Always" : "Every \(perXNumberOfDays) day(s)", value: $perXNumberOfDays, in: 0...10)
                     }
                 }
-            }
+            } // end of Form
+        } // end of VStack
+        .onAppear() {
+            print("Test")
         }
         .toolbar(content: {
             Button(action: {
@@ -123,6 +128,38 @@ struct AddEditItemView: View {
                 Text("Save")
             })
         })
+    }
+    
+    private func setDetails() {
+
+        if let item = item {
+            if let itemname = item.name {
+                name = itemname
+            }
+            degreeIsChecked = item.whenDegrees
+            minDegree = Int(item.minDegree)
+            maxDegree = Int(item.maxDegree)
+            //type of stay
+            tentIsChecked = item.whenTent
+            cabinIsChecked = item.whenCabin
+            hotelIsChecked = item.whenHotel
+            quantity = Int(item.quantity)
+            if item.measurement == "pcs" {
+                selectedMeasurementIndex = 0
+            } else if(item.measurement == "pair") {
+                selectedMeasurementIndex = 1
+            } else if(item.measurement == "hectogram") {
+                selectedMeasurementIndex = 2
+            } else {
+                selectedMeasurementIndex = 3
+            }
+            perXNumberOfDays = Int(item.perXNumberOfDays)
+            if(!degreeIsChecked && !tentIsChecked && !cabinIsChecked && !hotelIsChecked && quantity == 1 && selectedMeasurementIndex == 0 && perXNumberOfDays == 0) {
+                addFilters = false
+            } else {
+                addFilters = true
+            }
+        }
     }
     
     private func addItem() {

@@ -32,8 +32,6 @@ struct ContentView: View {
         filterItems()
     }
     
-    private var degreesMatch = false
-    
     // bool to track if item is long pressed to change name of navigation bar item
     @State private var itemIsLongPressed = false
     
@@ -43,6 +41,8 @@ struct ContentView: View {
     // variabels for delete alert
     @State private var toBeDeleted: IndexSet?
     @State private var showingDeleteAlert = false
+    
+    var itemName = ""
     
     
     var body: some View {
@@ -60,7 +60,7 @@ struct ContentView: View {
                             if let name = item.name {
                                 Text(name)
                             }
-                            Spacer()
+                            //Spacer()
                             
                             // changes item from not packed to packed
                             Image(systemName: "bag.badge.plus")
@@ -78,22 +78,25 @@ struct ContentView: View {
                     } // end of ForEach
                     .onDelete(perform: deleteRow)
                     .alert(isPresented: self.$showingDeleteAlert, content: {
-                            Alert(title: Text("Delete this item?"), message: Text("Item will be deleted from your application."), primaryButton: .destructive(Text("Delete")) {
-                                if let selfToBeDeleted = self.toBeDeleted {
-                                    for index in selfToBeDeleted {
-                                        let item = items[index]
-                                        viewContext.delete(item)
-                                        do {
-                                            try viewContext.save()
-                                        } catch let error {
-                                            print("Error: \(error)")
+                            Alert(title: Text("Delete this item?"),
+                                  message: Text("Item will be deleted from your application."),
+                                  primaryButton: .destructive(Text("Delete")) {
+                                    
+                                    if let selfToBeDeleted = self.toBeDeleted {
+                                        for index in selfToBeDeleted {
+                                            let item = items[index]
+                                            viewContext.delete(item)
+                                            do {
+                                                try viewContext.save()
+                                            } catch let error {
+                                                print("Error: \(error)")
+                                            }
                                         }
+                                        self.toBeDeleted = nil
                                     }
+                                  }, secondaryButton: .cancel() {
                                     self.toBeDeleted = nil
-                                }
-                            }, secondaryButton: .cancel() {
-                                self.toBeDeleted = nil
-                            }
+                                  }
                             )})
                     .onTapGesture {
                         if (itemIsLongPressed) {
@@ -123,7 +126,7 @@ struct ContentView: View {
             }), trailing: itemIsLongPressed ? NavigationLink(
                                         destination: AddEditItemView(),
                                         label: {
-                                            Image(systemName: "pencil")
+                                            Image(systemName: "square.and.pencil")
                                         }) : NavigationLink(
                                         destination: AddEditItemView(),
                                         label: {
@@ -154,14 +157,14 @@ struct ContentView: View {
     private func filterItems() -> [Item] {
         var filteredItems: [Item]
         
-        // if no filters hace been chosen, display all except packed items
+        // if no filters have been chosen, display all except packed items
         if(!degreeIsChecked && !tentIsChecked && !cabinIsChecked && !hotelIsChecked) {
             filteredItems = items.filter { item in
                 (!item.isPacked)
             }
             return filteredItems
             
-            // only degrees - have to add function to check min-max range!!
+            // only degrees
         } else if (degreeIsChecked && !tentIsChecked && !cabinIsChecked && !hotelIsChecked) {
             filteredItems = items.filter { item in
                 ((item.whenDegrees && checkTemp(itemMin: item.minDegree, itemMax: item.maxDegree) && !item.isPacked)
@@ -315,7 +318,6 @@ struct ContentView: View {
             }
         }
         return false
-        
     }
     
 } // end of view
