@@ -23,40 +23,50 @@ struct FilterView: View {
     @State var maxDegrees = [Int](0...30)
     @State var maxNumber = 30
     
+    // checks that minDegree is smaller than maxDegree
+    var errorMinMaxDegree : Bool {
+        degreeCheck()
+    }
+    
     var body: some View {
         VStack {
             Form {
                 Section(header: Text("Degrees")) {
-                    
+                        
                     Text("How many degrees °C will it be on your upcoming hike?")
                         .font(.caption)
                     Toggle(isOn: $filterSettings.degreeIsChecked) {
                         Text("Choose degree range")
                     }
                     if (filterSettings.degreeIsChecked) {
-                        // TEST SLIDER
-//                        VStack {
-//                            //Text("Value: " + slider.valueBetween)
-//                            //Text("Percentages: " + slider.percentagesBetween)
-//                            HStack {
-//                                Text("From: \(Int(slider.lowHandle.currentValue)) °C")
-//                                Spacer()
-//                                Text("To: \(Int(slider.highHandle.currentValue)) °C")
-//                            }
-//                            //Slider
-//                            SliderView(slider: slider)
-//                                .padding(.bottom)
-//                        } // END TEST SLIDER
+                            // TEST SLIDER
+    //                        VStack {
+    //                            //Text("Value: " + slider.valueBetween)
+    //                            //Text("Percentages: " + slider.percentagesBetween)
+    //                            HStack {
+    //                                Text("From: \(Int(slider.lowHandle.currentValue)) °C")
+    //                                Spacer()
+    //                                Text("To: \(Int(slider.highHandle.currentValue)) °C")
+    //                            }
+    //                            //Slider
+    //                            SliderView(slider: slider)
+    //                                .padding(.bottom)
+    //                        } // END TEST SLIDER
                         Picker(selection: $minDegree, label: Text("From:"), content: {
-                            ForEach(0..<minDegrees.count) { index in
+                            ForEach(minDegrees, id: \.self) { index in
                                 Text("\(minDegrees[index]) °C").tag(index)
                             }
                         })
                         Picker(selection: $maxDegree, label: Text("To:"), content: {
-                            ForEach(0..<maxDegrees.count) { index in
+                            ForEach(maxDegrees, id: \.self) { index in
                                 Text("\(maxDegrees[index]) °C").tag(index)
                             }
                         })
+                        if (errorMinMaxDegree) {
+                            Text("FROM degree must be lower than TO degree!")
+                                .font(.caption)
+                                .foregroundColor(Color.red)
+                        }
                     }
                 }
                 Section(header: Text("Type of stay")) {
@@ -77,15 +87,18 @@ struct FilterView: View {
                         .font(.caption)
                     Stepper("\(filterSettings.numberOfDays) day(s)", value: $filterSettings.numberOfDays, in: 1...10)
                 }
-            }
-        }
-        .toolbar(content: {
-            Button(action: {
-                resetFilters()
-            }, label: {
-                Text("Reset")
-            })
-        })
+            } // end of form
+        } // end of VStack
+        .navigationBarBackButtonHidden(errorMinMaxDegree)
+        .navigationBarItems(trailing: Button(action: {
+                            resetFilters()
+                        }, label: {
+                            Text("Reset")
+                        }))
+    } // end of body
+    
+    private func degreeCheck() -> Bool {
+        minDegree >= maxDegree ? true : false
     }
     
     private func resetFilters() {

@@ -29,6 +29,11 @@ struct AddEditItemView: View {
     var minDegrees = [Int](0...30)
     var maxDegrees = [Int](0...30)
     
+    // checks that minDegree is smaller than maxDegree
+    private var errorMinMaxDegree : Bool {
+        degreeCheck()
+    }
+    
     // item type of stay
     @State var tentIsChecked = false
     @State var cabinIsChecked = false
@@ -72,6 +77,11 @@ struct AddEditItemView: View {
                                     Text("\(maxDegrees[index]) °C").tag(index)
                                 }
                             })
+                            if (errorMinMaxDegree) {
+                                Text("FROM degree must be lower than TO degree!")
+                                    .font(.caption)
+                                    .foregroundColor(Color.red)
+                            }
                         }
                     }
                     Section(header: Text("Type of stay")) {
@@ -122,13 +132,15 @@ struct AddEditItemView: View {
         .onAppear() {
             setDetails()
         }
-        .toolbar(content: {
-            Button(action: {
-                save()
-            }, label: {
-                Text("Save")
-            })
-        })
+        .navigationBarItems(trailing: Button(action: {
+            save()
+        }, label: {
+            Text("Save")
+        }))
+    }
+    
+    private func degreeCheck() -> Bool {
+        minDegree >= maxDegree ? true : false
     }
     
     private func setDetails() {
