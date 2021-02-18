@@ -17,23 +17,24 @@ struct AddEditItemView: View {
     // variable for filter toggle
     @State var addFilters = false
     
-    // FAKE FOR LAYOUT
+    // item name
     @State var name: String = ""
     
-    // FAKE FOR LAYOUT
+    // item degrees
     @State var degreeIsChecked = false
     @State var minDegree = 10
     @State var maxDegree = 15
     
+    // for picker views
     var minDegrees = [Int](0...30)
     var maxDegrees = [Int](0...30)
     
-    // FAKE FOR LAYOUT
+    // item type of stay
     @State var tentIsChecked = false
     @State var cabinIsChecked = false
     @State var hotelIsChecked = false
     
-    // FAKE FOR LAYOUT
+    // item quantity / measurement
     @State var quantity = 1
     @State var perXNumberOfDays = 0
     @State var measuremeant = "pcs"
@@ -119,11 +120,11 @@ struct AddEditItemView: View {
             } // end of Form
         } // end of VStack
         .onAppear() {
-            print("Test")
+            setDetails()
         }
         .toolbar(content: {
             Button(action: {
-                addItem()
+                save()
             }, label: {
                 Text("Save")
             })
@@ -162,59 +163,89 @@ struct AddEditItemView: View {
         }
     }
     
-    private func addItem() {
+    private func save() {
         withAnimation {
-            let newItem = Item(context: viewContext)
-            if name == "" {
-                newItem.name = "Item not named"
-            } else {
-                newItem.name = name
-            }
-            newItem.whenTent = tentIsChecked
-            newItem.whenCabin = cabinIsChecked
-            newItem.whenHotel = hotelIsChecked
-            newItem.quantity = Double(quantity)
-            newItem.measurement = measurementOptions[selectedMeasurementIndex]
-            newItem.perXNumberOfDays = Int64(perXNumberOfDays)
-            newItem.whenDegrees = degreeIsChecked
+            if let item = item {
+                if name == "" {
+                    item.name = "Item not named"
+                } else {
+                    item.name = name
+                }
+                item.whenTent = tentIsChecked
+                item.whenCabin = cabinIsChecked
+                item.whenHotel = hotelIsChecked
+                item.quantity = Double(quantity)
+                item.measurement = measurementOptions[selectedMeasurementIndex]
+                item.perXNumberOfDays = Int64(perXNumberOfDays)
+                item.whenDegrees = degreeIsChecked
+                item.minDegree = Int64(minDegree)
+                item.maxDegree = Int64(maxDegree)
+                if (tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false) {
+                    item.whenTypeOfStay = false
+                } else {
+                    item.whenTypeOfStay = true
+                }
+                if(tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false && degreeIsChecked == false) {
+                    item.alwaysDisplayed = true
+                } else {
+                    item.alwaysDisplayed = false
+                }
+                item.category = ""
+                item.isPacked = false
+                
+                if viewContext.hasChanges {
+                    do {
+                        try viewContext.save()
+                        presentationMode.wrappedValue.dismiss()
+                    } catch {
+                        let nsError = error as NSError
+                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                    }
+                } else {
+                    presentationMode.wrappedValue.dismiss()
+                }
             
-            // FAKE VALUES FOR TESTING PURPOSES. CHANGE WHEN MULTISLIDER IMPLEMENTED.
-            newItem.minDegree = Int64(minDegree)
-            newItem.maxDegree = Int64(maxDegree)
-            if (tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false) {
-                newItem.whenTypeOfStay = false
             } else {
-                newItem.whenTypeOfStay = true
-            }
-            
-            // When no filter other than quantity is checked/changed, alwaysDisplayed is true, else false
-            if(tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false && degreeIsChecked == false) {
-                newItem.alwaysDisplayed = true
-            } else {
-                newItem.alwaysDisplayed = false
-            }
-            newItem.category = ""
-            newItem.isPacked = false
-            
-            do {
-                try viewContext.save()
-                presentationMode.wrappedValue.dismiss()
-                print(newItem)
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                let newItem = Item(context: viewContext)
+                if name == "" {
+                    newItem.name = "Item not named"
+                } else {
+                    newItem.name = name
+                }
+                newItem.whenTent = tentIsChecked
+                newItem.whenCabin = cabinIsChecked
+                newItem.whenHotel = hotelIsChecked
+                newItem.quantity = Double(quantity)
+                newItem.measurement = measurementOptions[selectedMeasurementIndex]
+                newItem.perXNumberOfDays = Int64(perXNumberOfDays)
+                newItem.whenDegrees = degreeIsChecked
+                newItem.minDegree = Int64(minDegree)
+                newItem.maxDegree = Int64(maxDegree)
+                if (tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false) {
+                    newItem.whenTypeOfStay = false
+                } else {
+                    newItem.whenTypeOfStay = true
+                }
+                
+                // When no filter other than quantity is checked/changed, alwaysDisplayed is true, else false
+                if(tentIsChecked == false && cabinIsChecked == false && hotelIsChecked == false && degreeIsChecked == false) {
+                    newItem.alwaysDisplayed = true
+                } else {
+                    newItem.alwaysDisplayed = false
+                }
+                newItem.category = ""
+                newItem.isPacked = false
+                
+                do {
+                    try viewContext.save()
+                    presentationMode.wrappedValue.dismiss()
+                    print(newItem)
+                } catch {
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
             }
         } // end of addItem function
-        
-//        for save function when editing - use:
-//        if viewContext.hasChanges {
-//            do {
-//                try viewContext.save()
-//            } catch {
-//                let nsError = error as NSError
-//                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//            }
-//        }
     }
 }
 

@@ -42,8 +42,7 @@ struct ContentView: View {
     @State private var toBeDeleted: IndexSet?
     @State private var showingDeleteAlert = false
     
-    var itemName = ""
-    
+    @State private var editMode = false
     
     var body: some View {
         
@@ -60,56 +59,32 @@ struct ContentView: View {
                             if let name = item.name {
                                 Text(name)
                             }
-                            //Spacer()
-                            
-                            // changes item from not packed to packed
-                            Image(systemName: "bag.badge.plus")
-                                .onTapGesture {
-                                    item.isPacked = true
-                                    do {
-                                        try viewContext.save()
-                                    } catch {
-                                        let nsError = error as NSError
-                                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                                    }
+                            Spacer()
+                            if(editMode) {
+                                NavigationLink(destination: AddEditItemView(item: item)) {
+                                    Text("")
                                 }
-                                .padding(.trailing)
+                            } else {
+                                // changes item from not packed to packed
+                                Image(systemName: "bag.badge.plus")
+                                    .onTapGesture {
+                                        item.isPacked = true
+                                        do {
+                                            try viewContext.save()
+                                        } catch {
+                                            let nsError = error as NSError
+                                            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                                        }
+                                    }
+                                    .padding(.trailing)
+                            }
                         } // end of HStack
                     } // end of ForEach
                     .onDelete(perform: deleteRow)
-                    .alert(isPresented: self.$showingDeleteAlert, content: {
-                            Alert(title: Text("Delete this item?"),
-                                  message: Text("Item will be deleted from your application."),
-                                  primaryButton: .destructive(Text("Delete")) {
-                                    
-                                    if let selfToBeDeleted = self.toBeDeleted {
-                                        for index in selfToBeDeleted {
-                                            let item = items[index]
-                                            viewContext.delete(item)
-                                            do {
-                                                try viewContext.save()
-                                            } catch let error {
-                                                print("Error: \(error)")
-                                            }
-                                        }
-                                        self.toBeDeleted = nil
-                                    }
-                                  }, secondaryButton: .cancel() {
-                                    self.toBeDeleted = nil
-                                  }
-                            )})
-                    .onTapGesture {
-                        if (itemIsLongPressed) {
-                            let newBool = false
-                            itemIsLongPressed = newBool
-                            //AVMARKERA SOM PRESSED
-                        }
-                    }
-                    .onLongPressGesture(minimumDuration: 0.1) {
-                        itemIsLongPressed = true
-                        // MARKERA SOM PRESSED
-                    }
                 } // end of list
+                .alert(isPresented: self.$showingDeleteAlert, content: {
+                        alert})
+                
                 Button(action: {
                     showPackedItemsView = true
                 }, label: {
@@ -118,23 +93,75 @@ struct ContentView: View {
                 .sheet(isPresented: $showPackedItemsView) {
                     PackedItemsView()
                 }
+                .listStyle(PlainListStyle())
+                .navigationBarTitle("Things to pack", displayMode: .automatic)
+                .navigationBarItems(leading: filterButton, trailing:
+                                        HStack {
+                                            editButton
+                                            addButton
+                                        })
             } // end of VStack
-            .listStyle(PlainListStyle())
-            .navigationBarTitle("Things to pack", displayMode: .inline)
-            .navigationBarItems(leading: NavigationLink(destination: FilterView(), label: {
-                Image(systemName: "slider.horizontal.3")
-            }), trailing: itemIsLongPressed ? NavigationLink(
-                                        destination: AddEditItemView(),
-                                        label: {
-                                            Image(systemName: "square.and.pencil")
-                                        }) : NavigationLink(
-                                        destination: AddEditItemView(),
-                                        label: {
-                                            Image(systemName: "plus")
-                                        }))
-        } // end of list
-    } // end of navigation view
+        } // end of navigation view
+    } // end of body
     
+    
+    // alert on delete
+    private var alert: Alert {
+        return Alert(title: Text("Delete this item?"),
+                     message: Text("Item will be deleted from your application."),
+                     primaryButton: .destructive(Text("Delete")) {
+                       
+                       if let selfToBeDeleted = self.toBeDeleted {
+                           for index in selfToBeDeleted {
+                               let item = items[index]
+                               viewContext.delete(item)
+                               do {
+                                   try viewContext.save()
+                               } catch let error {
+                                   print("Error: \(error)")
+                               }
+                           }
+                           self.toBeDeleted = nil
+                       }
+                     }, secondaryButton: .cancel() {
+                       self.toBeDeleted = nil
+                     }
+               )
+    }
+    
+    // function to delete row / show alert
+    private func deleteRow(at indexSet: IndexSet) {
+        self.toBeDeleted = indexSet
+        self.showingDeleteAlert = true
+    }
+    
+    // filter button
+    private var filterButton: some View {
+        return AnyView(NavigationLink(
+            destination: FilterView(),
+            label: {
+                Image(systemName: "slider.horizontal.3")
+            }))
+    }
+    
+    private var editButton: some View {
+        return AnyView(Button(action: {
+            editMode.toggle()
+        }, label: {
+            Text(editMode ? "DONE EDITING" : "EDIT ITEMS")
+        })
+                       
+        )
+    }
+    
+    // add item button
+    private var addButton: some View {
+        return AnyView(NavigationLink(
+            destination: AddEditItemView(),
+            label: {
+                Image(systemName: "plus")
+            }))
+    }
     
     // function to get the item quantity based on number of days chosen in filter
     private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int64) -> Int {
@@ -145,12 +172,6 @@ struct ContentView: View {
         } else {
             return Int(itemQuantity)
         }
-    }
-    
-    // function to delete row / show alert
-    private func deleteRow(at indexSet: IndexSet) {
-        self.toBeDeleted = indexSet
-        self.showingDeleteAlert = true
     }
     
     // function to get a filtered list according to filter settings
