@@ -29,9 +29,9 @@ struct AddEditItemView: View {
     var minDegrees = [Int](0...30)
     var maxDegrees = [Int](0...30)
     
-    // checks that minDegree is smaller than maxDegree
+    // checks that minDegree is lower than maxDegree
     private var errorMinMaxDegree : Bool {
-        degreeCheck()
+        minDegree >= maxDegree
     }
     
     // item type of stay
@@ -46,11 +46,14 @@ struct AddEditItemView: View {
     @State var selectedMeasurementIndex = 0
     var measurementOptions = ["pcs", "pair", "hectogram", "deciliter"]
     
+    // set details of item when editing, only once
+    @State var detailsSet = false
+    
     var body: some View {
         VStack {
             Form {
                 Section(header: Text("Name of Item")) {
-                    TextEditor(text: $name)
+                    TextField("", text: $name)
                 }
                 VStack {
                     HStack {
@@ -130,17 +133,16 @@ struct AddEditItemView: View {
             } // end of Form
         } // end of VStack
         .onAppear() {
-            setDetails()
+            if(!detailsSet) {
+                setDetails()
+                detailsSet = true
+            }
         }
         .navigationBarItems(trailing: Button(action: {
             save()
         }, label: {
             Text("Save")
-        }))
-    }
-    
-    private func degreeCheck() -> Bool {
-        minDegree >= maxDegree ? true : false
+        }).disabled(errorMinMaxDegree))
     }
     
     private func setDetails() {
@@ -209,6 +211,7 @@ struct AddEditItemView: View {
                 if viewContext.hasChanges {
                     do {
                         try viewContext.save()
+                        detailsSet = false
                         presentationMode.wrappedValue.dismiss()
                     } catch {
                         let nsError = error as NSError
@@ -251,14 +254,14 @@ struct AddEditItemView: View {
                 
                 do {
                     try viewContext.save()
+                    detailsSet = false
                     presentationMode.wrappedValue.dismiss()
-                    print(newItem)
                 } catch {
                     let nsError = error as NSError
                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                 }
             }
-        } // end of addItem function
+        } // end of save function
     }
 }
 
