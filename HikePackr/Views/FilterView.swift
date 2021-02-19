@@ -10,62 +10,59 @@ import SwiftUI
 struct FilterView: View {
     
     //TEST SLIDER
-    @ObservedObject var slider = CustomSlider(start: -10, end: 30)
+    //@ObservedObject var slider = CustomSlider(start: -10, end: 30)
     
     @Environment(\.presentationMode) var presentationMode
     
     @ObservedObject var filterSettings = FilterSettings()
     
+    // updating user defaults
     @AppStorage("minDegree") var minDegree : Int = 10
     @AppStorage("maxDegree") var maxDegree : Int = 20
     
+    // ranges for degree pickers
     @State var minDegrees = [Int](0...30)
     @State var maxDegrees = [Int](0...30)
-    @State var maxNumber = 30
     
-    // checks that minDegree is smaller than maxDegree
+    // checks that minDegree is lower than maxDegree, else maxdegree is changed to min + 1
     var errorMinMaxDegree : Bool {
-        degreeCheck()
+        let a = minDegree >= maxDegree
+        if(a) {
+            maxDegree = minDegree + 1
+        }
+        return a
     }
-    
+
     var body: some View {
         VStack {
             Form {
+                
+                // filter selections - degrees
                 Section(header: Text("Degrees")) {
-                        
                     Text("How many degrees °C will it be on your upcoming hike?")
                         .font(.caption)
                     Toggle(isOn: $filterSettings.degreeIsChecked) {
                         Text("Choose degree range")
                     }
                     if (filterSettings.degreeIsChecked) {
-                            // TEST SLIDER
-    //                        VStack {
-    //                            //Text("Value: " + slider.valueBetween)
-    //                            //Text("Percentages: " + slider.percentagesBetween)
-    //                            HStack {
-    //                                Text("From: \(Int(slider.lowHandle.currentValue)) °C")
-    //                                Spacer()
-    //                                Text("To: \(Int(slider.highHandle.currentValue)) °C")
-    //                            }
-    //                            //Slider
-    //                            SliderView(slider: slider)
-    //                                .padding(.bottom)
-    //                        } // END TEST SLIDER
+                        
+                        // min degrees
                         Picker(selection: $minDegree, label: Text("From:"), content: {
                             ForEach(minDegrees, id: \.self) { index in
                                 Text("\(minDegrees[index]) °C").tag(index)
                             }
                         })
+                        
+                        // max degrees
                         Picker(selection: $maxDegree, label: Text("To:"), content: {
                             ForEach(maxDegrees, id: \.self) { index in
                                 Text("\(maxDegrees[index]) °C").tag(index)
                             }
                         })
-                        if (errorMinMaxDegree) {
-                            Text("FROM degree must be lower than TO degree!")
+                        if(errorMinMaxDegree) {
+                            Text("From degree must be lower than to degree")
                                 .font(.caption)
-                                .foregroundColor(Color.red)
+                                .foregroundColor(.red)
                         }
                     }
                 }
@@ -97,10 +94,6 @@ struct FilterView: View {
                         }))
     } // end of body
     
-    private func degreeCheck() -> Bool {
-        minDegree >= maxDegree ? true : false
-    }
-    
     private func resetFilters() {
         filterSettings.degreeIsChecked = false
         filterSettings.minDegree = 10
@@ -109,7 +102,6 @@ struct FilterView: View {
         filterSettings.cabinIsChecked = false
         filterSettings.hotelIsChecked = false
         filterSettings.numberOfDays = 1
-        
     }
 }
 
@@ -118,3 +110,18 @@ struct FilterView_Previews: PreviewProvider {
         FilterView()
     }
 }
+
+
+// TEST SLIDER
+//                        VStack {
+//                            //Text("Value: " + slider.valueBetween)
+//                            //Text("Percentages: " + slider.percentagesBetween)
+//                            HStack {
+//                                Text("From: \(Int(slider.lowHandle.currentValue)) °C")
+//                                Spacer()
+//                                Text("To: \(Int(slider.highHandle.currentValue)) °C")
+//                            }
+//                            //Slider
+//                            SliderView(slider: slider)
+//                                .padding(.bottom)
+//                        } // END TEST SLIDER

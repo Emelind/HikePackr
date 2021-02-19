@@ -84,7 +84,6 @@ struct ContentView: View {
                 } // end of list
                 .alert(isPresented: self.$showingDeleteAlert, content: {
                         alert})
-                
                 Button(action: {
                     showPackedItemsView = true
                 }, label: {

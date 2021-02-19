@@ -175,6 +175,7 @@ struct AddEditItemView: View {
         }
     }
     
+    // SKA EJ GÅ ATT SPARA OM ERRORMINMAXDEGREE == TRUE
     private func save() {
         withAnimation {
             if let item = item {
