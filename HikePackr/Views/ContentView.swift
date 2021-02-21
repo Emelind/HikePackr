@@ -380,18 +380,3 @@ struct ContentView_Previews: PreviewProvider {
  
  ** alwaysDisplayed == true
  */
-
-
-/*
- 
- filter degrees 10...15
- itemdegreerange item.min..item.max = 10...15
- 
- for number in itemdegreerange
- 
-        for filternumber in filterrange
-            if number == filter number
-        return true
- 
-        else return false
- */

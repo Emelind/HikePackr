@@ -53,7 +53,11 @@ struct AddEditItemView: View {
         VStack {
             Form {
                 Section(header: Text("Name of Item")) {
-                    TextField("", text: $name)
+                    HStack {
+                        TextField("", text: $name)
+                        Image(systemName: "mic.fill")
+                    }
+                    
                 }
                 VStack {
                     HStack {
