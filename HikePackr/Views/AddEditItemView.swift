@@ -9,10 +9,15 @@ import SwiftUI
 
 struct AddEditItemView: View {
     
-    @State var item: Item? = nil
-    
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.presentationMode) var presentationMode
+    
+    var item: Item? = nil
+    
+    //TEST SPEECH TO TEXT
+    @State private var recording = false
+    @ObservedObject private var mic = MicMonitor(numberOfSamples: 30)
+    private var speechManager = SpeechManager()
     
     // variable for filter toggle
     @State var addFilters = false
@@ -49,15 +54,27 @@ struct AddEditItemView: View {
     // set details of item when editing, only once
     @State var detailsSet = false
     
+    init(item: Item?) {
+        self.item = item
+    }
+    
     var body: some View {
         VStack {
             Form {
                 Section(header: Text("Name of Item")) {
                     HStack {
-                        TextField("", text: $name)
-                        Image(systemName: "mic.fill")
+                        ZStack {
+                            TextField("", text: $name)
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color.black.opacity(0.7))
+                                .frame(height: 40)
+                                .overlay(VStack {
+                                    visualizerView()
+                                })
+                                .opacity(recording ? 1 : 0)
+                        }
+                        recordButton()
                     }
-                    
                 }
                 VStack {
                     HStack {
@@ -134,19 +151,69 @@ struct AddEditItemView: View {
                         Stepper(perXNumberOfDays == 0 ? "Always" : "Every \(perXNumberOfDays) day(s)", value: $perXNumberOfDays, in: 0...10)
                     }
                 }
+                Button(action: {
+                    save()
+                }, label: {
+                    Text("Save")
+                }).disabled(errorMinMaxDegree)
             } // end of Form
         } // end of VStack
+//        .navigationBarItems(trailing: Button(action: {
+//            save()
+//        }, label: {
+//            Text("Save")
+//        }).disabled(errorMinMaxDegree))
         .onAppear() {
+            speechManager.checkPermissions()
+            
             if(!detailsSet) {
                 setDetails()
                 detailsSet = true
             }
         }
-        .navigationBarItems(trailing: Button(action: {
-            save()
+    } // end of body
+    
+    private func recordButton() -> some View {
+        Button(action: {
+            recordItemName()
         }, label: {
-            Text("Save")
-        }).disabled(errorMinMaxDegree))
+            Image(systemName: recording ? "stop.fill" : "mic.fill")
+                .foregroundColor(recording ? .red : .blue)
+        })
+    }
+    
+    private func recordItemName() {
+        if speechManager.isRecording {
+            self.recording = false
+            mic.stopMonitoring()
+            speechManager.stopRecording()
+        } else {
+            self.recording = true
+            mic.startMonitoring()
+            speechManager.start { (speechText) in
+                guard let text = speechText, !text.isEmpty else {
+                    self.recording = false
+                    return
+                }
+                name = text
+            }
+        }
+        speechManager.isRecording.toggle()
+    }
+    
+    private func normalizedSoundLevel(level: Float) -> CGFloat {
+        let level = max(0.2, CGFloat(level) + 50) / 2
+        return CGFloat(level * (100 / 25))
+    }
+    
+    private func visualizerView() -> some View {
+        VStack {
+            HStack(spacing: 2) {
+                ForEach(mic.soundSamples, id: \.self) { level in
+                    BarView(value: self.normalizedSoundLevel(level: level))
+                }
+            }
+        }
     }
     
     private func setDetails() {
@@ -178,11 +245,14 @@ struct AddEditItemView: View {
             } else {
                 addFilters = true
             }
+        } else {
+            return
         }
     }
     
-    // SKA EJ GÅ ATT SPARA OM ERRORMINMAXDEGREE == TRUE
+    // save new or edited item
     private func save() {
+        print("SAVE")
         withAnimation {
             if let item = item {
                 if name == "" {
@@ -265,12 +335,12 @@ struct AddEditItemView: View {
                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                 }
             }
-        } // end of save function
-    }
-}
+        } // end of animation
+    } // end of save function
+} // end of struct
 
-struct AddEditItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddEditItemView()
-    }
-}
+//struct AddEditItemView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AddEditItemView()
+//    }
+//}

@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		985A453225E2DCC100ABEB7D /* ListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985A453125E2DCC100ABEB7D /* ListRowView.swift */; };
 		985F3AAC25E2880900F485C7 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985F3AAB25E2880900F485C7 /* SpeechManager.swift */; };
+		985F3AB225E29DDE00F485C7 /* MicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985F3AB125E29DDE00F485C7 /* MicManager.swift */; };
+		985F3AB525E2B7CF00F485C7 /* BarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985F3AB425E2B7CF00F485C7 /* BarView.swift */; };
 		985FF92E25D270E500BB8822 /* PackedItemsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985FF92D25D270E500BB8822 /* PackedItemsView.swift */; };
 		98611B4225D6CEA60006EA39 /* FilterSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98611B4125D6CEA60006EA39 /* FilterSettings.swift */; };
 		987BC0F525D1B86A00C10D5D /* HikePackrApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987BC0F425D1B86A00C10D5D /* HikePackrApp.swift */; };
@@ -22,7 +25,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		985A453125E2DCC100ABEB7D /* ListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRowView.swift; sourceTree = "<group>"; };
 		985F3AAB25E2880900F485C7 /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
+		985F3AB125E29DDE00F485C7 /* MicManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicManager.swift; sourceTree = "<group>"; };
+		985F3AB425E2B7CF00F485C7 /* BarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarView.swift; sourceTree = "<group>"; };
 		985FF92D25D270E500BB8822 /* PackedItemsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackedItemsView.swift; sourceTree = "<group>"; };
 		98611B4125D6CEA60006EA39 /* FilterSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSettings.swift; sourceTree = "<group>"; };
 		9867249025D3CDE0003008AD /* HikePackr 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HikePackr 2.xcdatamodel"; sourceTree = "<group>"; };
@@ -53,6 +59,7 @@
 		985F3AAA25E287D500F485C7 /* SpeechManager */ = {
 			isa = PBXGroup;
 			children = (
+				985F3AB125E29DDE00F485C7 /* MicManager.swift */,
 				985F3AAB25E2880900F485C7 /* SpeechManager.swift */,
 			);
 			path = SpeechManager;
@@ -61,11 +68,13 @@
 		9867248E25D3BC5F003008AD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				985F3AB425E2B7CF00F485C7 /* BarView.swift */,
 				987BC0F625D1B86A00C10D5D /* ContentView.swift */,
 				987BC10D25D1C2B500C10D5D /* FilterView.swift */,
 				987BC11025D1C2E600C10D5D /* AddEditItemView.swift */,
 				985FF92D25D270E500BB8822 /* PackedItemsView.swift */,
 				98D34E9925D5643D00814A80 /* PackedCountView.swift */,
+				985A453125E2DCC100ABEB7D /* ListRowView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -179,12 +188,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				985F3AB525E2B7CF00F485C7 /* BarView.swift in Sources */,
 				98611B4225D6CEA60006EA39 /* FilterSettings.swift in Sources */,
 				987BC10125D1B86C00C10D5D /* HikePackr.xcdatamodeld in Sources */,
 				987BC11125D1C2E600C10D5D /* AddEditItemView.swift in Sources */,
 				987BC0FE25D1B86C00C10D5D /* Persistence.swift in Sources */,
 				987BC0F725D1B86A00C10D5D /* ContentView.swift in Sources */,
+				985A453225E2DCC100ABEB7D /* ListRowView.swift in Sources */,
 				98D34E9A25D5643D00814A80 /* PackedCountView.swift in Sources */,
+				985F3AB225E29DDE00F485C7 /* MicManager.swift in Sources */,
 				987BC10E25D1C2B500C10D5D /* FilterView.swift in Sources */,
 				985FF92E25D270E500BB8822 /* PackedItemsView.swift in Sources */,
 				987BC0F525D1B86A00C10D5D /* HikePackrApp.swift in Sources */,

@@ -33,16 +33,16 @@ struct ContentView: View {
     }
     
     // bool to track if item is long pressed to change name of navigation bar item
-    @State private var itemIsLongPressed = false
+    @State private var itemIsLongPressed : Bool = false
     
     // bool for sheet
-    @State private var showPackedItemsView = false
+    @State private var showPackedItemsView : Bool = false
     
     // variabels for delete alert
     @State private var toBeDeleted: IndexSet?
-    @State private var showingDeleteAlert = false
+    @State private var showingDeleteAlert : Bool = false
     
-    @State private var editMode = false
+    @State private var editMode : Bool = false
     
     var body: some View {
         
@@ -50,40 +50,13 @@ struct ContentView: View {
             VStack {
                 List {
                     ForEach(filteredList) { item in
-                        HStack {
-                            // call function calculateQuantity to get quantity based on number of days chosen in filter
-                            Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
-                            if let measurement = item.measurement {
-                                Text(measurement)
-                            }
-                            if let name = item.name {
-                                Text(name)
-                            }
-                            Spacer()
-                            if(editMode) {
-                                NavigationLink(destination: AddEditItemView(item: item)) {
-                                    Text("")
-                                }
-                            } else {
-                                // changes item from not packed to packed
-                                Image(systemName: "bag.badge.plus")
-                                    .onTapGesture {
-                                        item.isPacked = true
-                                        do {
-                                            try viewContext.save()
-                                        } catch {
-                                            let nsError = error as NSError
-                                            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                                        }
-                                    }
-                                    .padding(.trailing)
-                            }
-                        } // end of HStack
+                        ListRowView(item: item, editMode: editMode)
                     } // end of ForEach
                     .onDelete(perform: deleteRow)
                 } // end of list
                 .alert(isPresented: self.$showingDeleteAlert, content: {
                         alert})
+                Spacer()
                 Button(action: {
                     showPackedItemsView = true
                 }, label: {
@@ -102,7 +75,6 @@ struct ContentView: View {
             } // end of VStack
         } // end of navigation view
     } // end of body
-    
     
     // alert on delete
     private var alert: Alert {
@@ -124,8 +96,7 @@ struct ContentView: View {
                        }
                      }, secondaryButton: .cancel() {
                        self.toBeDeleted = nil
-                     }
-               )
+                     })
     }
     
     // function to delete row / show alert
@@ -148,31 +119,18 @@ struct ContentView: View {
             editMode.toggle()
         }, label: {
             Text(editMode ? "DONE EDITING" : "EDIT ITEMS")
-        })
-                       
-        )
+        }))
     }
     
     // add item button
     private var addButton: some View {
         return AnyView(NavigationLink(
-            destination: AddEditItemView(),
+                        destination: AddEditItemView(item: nil),
             label: {
                 Image(systemName: "plus")
             }))
     }
-    
-    // function to get the item quantity based on number of days chosen in filter
-    private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int64) -> Int {
-        if(perXNumberOfDays > 0) {
-            let quantityDouble = (itemQuantity / Double(perXNumberOfDays))
-            let perDayDouble = quantityDouble * Double(numberOfDays)
-            return Int(perDayDouble.rounded(.up))
-        } else {
-            return Int(itemQuantity)
-        }
-    }
-    
+        
     // function to get a filtered list according to filter settings
     private func filterItems() -> [Item] {
         var filteredItems: [Item]
