@@ -150,19 +150,17 @@ struct AddEditItemView: View {
                         }
                         Stepper(perXNumberOfDays == 0 ? "Always" : "Every \(perXNumberOfDays) day(s)", value: $perXNumberOfDays, in: 0...10)
                     }
+                } // end of if addFilters
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        save()
+                    }, label: {
+                        Text("Save")
+                    }).disabled(errorMinMaxDegree)
                 }
-                Button(action: {
-                    save()
-                }, label: {
-                    Text("Save")
-                }).disabled(errorMinMaxDegree)
             } // end of Form
         } // end of VStack
-//        .navigationBarItems(trailing: Button(action: {
-//            save()
-//        }, label: {
-//            Text("Save")
-//        }).disabled(errorMinMaxDegree))
         .onAppear() {
             speechManager.checkPermissions()
             
