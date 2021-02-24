@@ -250,7 +250,6 @@ struct AddEditItemView: View {
     
     // save new or edited item
     private func save() {
-        print("SAVE")
         withAnimation {
             if let item = item {
                 if name == "" {

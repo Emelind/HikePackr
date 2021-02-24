@@ -15,13 +15,10 @@ struct PackedCountView: View {
     
     private var items: FetchedResults<Item>
     
-    
-    
     var body: some View {
         HStack {
             Text("Packed Items ( \(items.count) )")
             Image(systemName: "bag.fill")
-            Image(systemName: "chevron.up")
         }
     }
 }

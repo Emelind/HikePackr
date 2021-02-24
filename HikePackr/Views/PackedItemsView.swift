@@ -49,7 +49,12 @@ struct PackedItemsView: View {
                 Button(action: {
                     clearAll()
                 }, label: {
-                    Text("Empty bag")
+                    HStack {
+                        Spacer()
+                        Text("Empty bag")
+                            .foregroundColor(.blue)
+                    }
+                    
                 })
             }
         }
@@ -68,18 +73,20 @@ struct PackedItemsView: View {
     
     // clear all items from packed items view
     private func clearAll() {
-        for item in items {
-            if (item.isPacked) {
-                item.isPacked.toggle()
+        withAnimation {
+            for item in items {
+                if (item.isPacked) {
+                    item.isPacked.toggle()
+                }
             }
-        }
-        if viewContext.hasChanges {
-            do {
-                try viewContext.save()
-                // presentationMode.wrappedValue.dismiss()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            if viewContext.hasChanges {
+                do {
+                    try viewContext.save()
+                    // presentationMode.wrappedValue.dismiss()
+                } catch {
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
             }
         }
     }

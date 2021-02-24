@@ -48,31 +48,37 @@ struct ContentView: View {
         
         NavigationView {
             VStack {
-                List {
-                    ForEach(filteredList) { item in
-                        ListRowView(item: item, editMode: editMode)
-                    } // end of ForEach
-                    .onDelete(perform: deleteRow)
-                } // end of list
-                .alert(isPresented: self.$showingDeleteAlert, content: {
-                        alert})
+                Form {
+                    if (editMode) {
+                        Section {
+                            addButton
+                        }
+                    }
+                    Section {
+                        ForEach(filteredList) { item in
+                            ListRowView(item: item, editMode: editMode)
+                        } // end of ForEach
+                        .onDelete(perform: deleteRow)
+                    }
+                }                
                 Spacer()
                 Button(action: {
                     showPackedItemsView = true
                 }, label: {
                     PackedCountView()
                 })
+                .disabled(editMode)
                 .sheet(isPresented: $showPackedItemsView) {
                     PackedItemsView()
+                        .environment(\.managedObjectContext, self.viewContext)
                 }
-                .listStyle(PlainListStyle())
-                .navigationBarTitle("Things to pack", displayMode: .automatic)
-                .navigationBarItems(leading: filterButton, trailing:
-                                        HStack {
-                                            editButton
-                                            addButton
-                                        })
             } // end of VStack
+            .alert(isPresented: self.$showingDeleteAlert, content: {
+                    alert})
+            .navigationBarTitle("Things to pack", displayMode: .automatic)
+            .navigationBarItems(leading: filterButton
+                                    .disabled(editMode),
+                                trailing: editButton)
         } // end of navigation view
     } // end of body
     
@@ -110,7 +116,7 @@ struct ContentView: View {
         return AnyView(NavigationLink(
             destination: FilterView(),
             label: {
-                Image(systemName: "slider.horizontal.3")
+                Text("FILTER")
             }))
     }
     
@@ -126,9 +132,12 @@ struct ContentView: View {
     private var addButton: some View {
         return AnyView(NavigationLink(
                         destination: AddEditItemView(item: nil),
-            label: {
-                Image(systemName: "plus")
-            }))
+                        label: {
+                            HStack {
+                                Text("New item")
+                                    .foregroundColor(.blue)
+                            }
+                        }))
     }
         
     // function to get a filtered list according to filter settings
