@@ -77,13 +77,14 @@ struct AddEditItemView: View {
                     }
                 }
                 VStack {
+                    Toggle(isOn: $addFilters, label: {
+                        Text("Add filters?")
+                    })
                     HStack {
-                        Toggle(isOn: $addFilters, label: {
-                            Text("Add filters?")
-                        })
+                        Text("If none is chosen, item is always shown")
+                            .font(.caption)
+                        Spacer()
                     }
-                    Text("If none is chosen, item is always shown")
-                        .font(.caption)
                 }
                 if (addFilters) {
                     Section(header: Text("Degrees")) {

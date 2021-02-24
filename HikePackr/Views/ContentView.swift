@@ -57,8 +57,19 @@ struct ContentView: View {
                     Section {
                         ForEach(filteredList) { item in
                             ListRowView(item: item, editMode: editMode)
-                        } // end of ForEach
-                        .onDelete(perform: deleteRow)
+                        }
+                        .onDelete(perform: { indexSet in
+                            for index in indexSet {
+                                let item = filteredList[index]
+                                print(item)
+                                viewContext.delete(item)
+                                do {
+                                    try viewContext.save()
+                                } catch let error {
+                                    print("Error: \(error)")
+                                }
+                            }
+                        })
                     }
                 }                
                 Spacer()
@@ -73,43 +84,12 @@ struct ContentView: View {
                         .environment(\.managedObjectContext, self.viewContext)
                 }
             } // end of VStack
-            .alert(isPresented: self.$showingDeleteAlert, content: {
-                    alert})
             .navigationBarTitle("Things to pack", displayMode: .automatic)
             .navigationBarItems(leading: filterButton
                                     .disabled(editMode),
                                 trailing: editButton)
         } // end of navigation view
     } // end of body
-    
-    // alert on delete
-    private var alert: Alert {
-        return Alert(title: Text("Delete this item?"),
-                     message: Text("Item will be deleted from your application."),
-                     primaryButton: .destructive(Text("Delete")) {
-                       
-                       if let selfToBeDeleted = self.toBeDeleted {
-                           for index in selfToBeDeleted {
-                               let item = items[index]
-                               viewContext.delete(item)
-                               do {
-                                   try viewContext.save()
-                               } catch let error {
-                                   print("Error: \(error)")
-                               }
-                           }
-                           self.toBeDeleted = nil
-                       }
-                     }, secondaryButton: .cancel() {
-                       self.toBeDeleted = nil
-                     })
-    }
-    
-    // function to delete row / show alert
-    private func deleteRow(at indexSet: IndexSet) {
-        self.toBeDeleted = indexSet
-        self.showingDeleteAlert = true
-    }
     
     // filter button
     private var filterButton: some View {
