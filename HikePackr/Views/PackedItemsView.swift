@@ -28,16 +28,29 @@ struct PackedItemsView: View {
             }
             ForEach(items) { item in
                 HStack {
-                    Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
-                        .padding(.leading)
-                    if let measurement = item.measurement {
-                        Text(measurement)
-                    }
-                    if let name = item.name {
-                        Text(name)
-                    }
+                    VStack {
+                        HStack {
+                            if let name = item.name {
+                                Text(name)
+                                    .font(.headline)
+                            }
+                            Spacer()
+                        } // end of HStack
+                        HStack {
+                            Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
+                                .font(.caption)
+                                .foregroundColor(Color.gray)
+                            if let measurement = item.measurement {
+                                Text(measurement)
+                                    .font(.caption)
+                                    .foregroundColor(Color.gray)
+                            }
+                            Spacer()
+                        }
+                    } // end of VStack
                     Spacer()
-                    Image(systemName: "bag.badge.minus")
+                    Image(systemName: "minus")
+                        .padding(10.0)
                         .onTapGesture {
                             item.isPacked = false
                             do {
@@ -47,7 +60,6 @@ struct PackedItemsView: View {
                                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                             }
                         }
-                        .padding(.trailing)
                 } // end of HStack
             } // end of ForEach
         } // end of List
@@ -71,6 +83,7 @@ struct PackedItemsView: View {
             clearAll()
         }, label: {
             Text("Empty bag")
+                .foregroundColor(.red)
         })
     }
     

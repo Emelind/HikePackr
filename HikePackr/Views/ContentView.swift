@@ -61,7 +61,6 @@ struct ContentView: View {
                         .onDelete(perform: { indexSet in
                             for index in indexSet {
                                 let item = filteredList[index]
-                                print(item)
                                 viewContext.delete(item)
                                 do {
                                     try viewContext.save()
@@ -96,7 +95,7 @@ struct ContentView: View {
         return AnyView(NavigationLink(
             destination: FilterView(),
             label: {
-                Text("FILTER")
+                Text("Filter")
             }))
     }
     
@@ -104,7 +103,7 @@ struct ContentView: View {
         return AnyView(Button(action: {
             editMode.toggle()
         }, label: {
-            Text(editMode ? "DONE" : "EDIT")
+            Text(editMode ? "Done" : "Edit")
         }))
     }
     

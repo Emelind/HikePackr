@@ -16,13 +16,26 @@ struct ListRowView: View {
     
     var body: some View {
         HStack {
-            // call function calculateQuantity to get quantity based on number of days chosen in filter
-            Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
-            if let measurement = item.measurement {
-                Text(measurement)
-            }
-            if let name = item.name {
-                Text(name)
+            VStack {
+                HStack {
+                    if let name = item.name {
+                        Text(name)
+                            .font(.headline)
+                    }
+                    Spacer()
+                }
+                HStack {
+                    // call function calculateQuantity to get quantity based on number of days chosen in filter
+                    Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
+                        .font(.caption)
+                        .foregroundColor(Color.gray)
+                    if let measurement = item.measurement {
+                        Text(measurement)
+                            .font(.caption)
+                            .foregroundColor(Color.gray)
+                    }
+                    Spacer()
+                }
             }
             Spacer()
             if(editMode) {
@@ -31,7 +44,8 @@ struct ListRowView: View {
                 }
             } else {
                 // changes item from not packed to packed
-                Image(systemName: "bag.badge.plus")
+                Image(systemName: "plus")
+                    .padding(10.0)
                     .onTapGesture {
                         item.isPacked = true
                         do {
@@ -41,7 +55,6 @@ struct ListRowView: View {
                             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                         }
                     }
-                    .padding(.trailing)
             }
         }
     }
