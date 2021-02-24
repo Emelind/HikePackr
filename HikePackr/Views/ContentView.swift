@@ -124,7 +124,7 @@ struct ContentView: View {
         return AnyView(Button(action: {
             editMode.toggle()
         }, label: {
-            Text(editMode ? "DONE EDITING" : "EDIT ITEMS")
+            Text(editMode ? "DONE" : "EDIT")
         }))
     }
     

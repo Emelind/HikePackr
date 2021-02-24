@@ -20,55 +20,58 @@ struct PackedItemsView: View {
     @AppStorage("days") var numberOfDays : Int = 1
     
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    HStack {
-                        Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
-                            .padding(.leading)
-                        if let measurement = item.measurement {
-                            Text(measurement)
-                        }
-                        if let name = item.name {
-                            Text(name)
-                        }
-                        Spacer()
-                        Image(systemName: "bag.badge.minus")
-                            .onTapGesture {
-                                item.isPacked = false
-                                do {
-                                    try viewContext.save()
-                                } catch {
-                                    let nsError = error as NSError
-                                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                                }
-                            }
-                            .padding(.trailing)
-                    }
-                } // end of ForEach
-                Button(action: {
-                    clearAll()
-                }, label: {
-                    HStack {
-                        Spacer()
-                        Text("Empty bag")
-                            .foregroundColor(.blue)
-                    }
-                    
-                })
+        List {
+            HStack {
+                clearAllButton
+                Spacer()
+                cancelButton
             }
-        }
+            ForEach(items) { item in
+                HStack {
+                    Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
+                        .padding(.leading)
+                    if let measurement = item.measurement {
+                        Text(measurement)
+                    }
+                    if let name = item.name {
+                        Text(name)
+                    }
+                    Spacer()
+                    Image(systemName: "bag.badge.minus")
+                        .onTapGesture {
+                            item.isPacked = false
+                            do {
+                                try viewContext.save()
+                            } catch {
+                                let nsError = error as NSError
+                                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                            }
+                        }
+                        .padding(.trailing)
+                } // end of HStack
+            } // end of ForEach
+        } // end of List
+    } // end of body
+    
+    private var cancelButton: some View {
+        return Button(action: {
+            cancel()
+        }, label: {
+            Text("Cancel")
+                .foregroundColor(.blue)
+        })
     }
     
-    // function to get the item quantity based on number of days chosen in filter
-    private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int64) -> Int {
-        if(perXNumberOfDays > 0) {
-            let quantityDouble = (itemQuantity / Double(perXNumberOfDays))
-            let perDayDouble = quantityDouble * Double(numberOfDays)
-            return Int(perDayDouble.rounded(.up))
-        } else {
-            return Int(itemQuantity)
-        }
+    private func cancel() {
+        presentationMode.wrappedValue.dismiss()
+    }
+    
+    private var clearAllButton: some View {
+        return Button(action: {
+            clearAll()
+        }, label: {
+            Text("Empty bag")
+        })
     }
     
     // clear all items from packed items view
@@ -82,12 +85,22 @@ struct PackedItemsView: View {
             if viewContext.hasChanges {
                 do {
                     try viewContext.save()
-                    // presentationMode.wrappedValue.dismiss()
                 } catch {
                     let nsError = error as NSError
                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                 }
             }
+        }
+    }
+    
+    // function to get the item quantity based on number of days chosen in filter
+    private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int64) -> Int {
+        if(perXNumberOfDays > 0) {
+            let quantityDouble = (itemQuantity / Double(perXNumberOfDays))
+            let perDayDouble = quantityDouble * Double(numberOfDays)
+            return Int(perDayDouble.rounded(.up))
+        } else {
+            return Int(itemQuantity)
         }
     }
 }
