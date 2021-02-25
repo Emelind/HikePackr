@@ -19,7 +19,7 @@ struct ListRowView: View {
             VStack {
                 HStack {
                     if let name = item.name {
-                        Text(name)
+                        Text(name.prefix(20))
                             .font(.headline)
                     }
                     Spacer()
@@ -44,17 +44,18 @@ struct ListRowView: View {
                 }
             } else {
                 // changes item from not packed to packed
-                Image(systemName: "plus")
-                    .padding(10.0)
-                    .onTapGesture {
-                        item.isPacked = true
-                        do {
-                            try viewContext.save()
-                        } catch {
-                            let nsError = error as NSError
-                            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                        }
+                Button(action: {
+                    item.isPacked = true
+                    do {
+                        try viewContext.save()
+                    } catch {
+                        let nsError = error as NSError
+                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                     }
+                }, label: {
+                    Image(systemName: "plus")
+                        .padding(10.0)
+                })
             }
         }
     }

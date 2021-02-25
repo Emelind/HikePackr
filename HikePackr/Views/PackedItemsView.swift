@@ -31,7 +31,7 @@ struct PackedItemsView: View {
                     VStack {
                         HStack {
                             if let name = item.name {
-                                Text(name)
+                                Text(name.prefix(20))
                                     .font(.headline)
                             }
                             Spacer()
@@ -49,17 +49,19 @@ struct PackedItemsView: View {
                         }
                     } // end of VStack
                     Spacer()
-                    Image(systemName: "minus")
-                        .padding(10.0)
-                        .onTapGesture {
-                            item.isPacked = false
-                            do {
-                                try viewContext.save()
-                            } catch {
-                                let nsError = error as NSError
-                                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-                            }
+                    Button(action: {
+                        item.isPacked = false
+                        do {
+                            try viewContext.save()
+                        } catch {
+                            let nsError = error as NSError
+                            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                         }
+                    }, label: {
+                        Image(systemName: "minus")
+                            .foregroundColor(.blue)
+                            .padding(10.0)
+                    })
                 } // end of HStack
             } // end of ForEach
         } // end of List

@@ -24,13 +24,13 @@ class MicMonitor : ObservableObject {
         self.currentSample = 0
         
         let audioSession = AVAudioSession.sharedInstance()
-//        if audioSession.recordPermission != .granted {
-//            audioSession.requestRecordPermission { (success) in
-//                if !success {
-//                    fatalError("We need audio recording for visualization")
-//                }
-//            }
-//        }
+        if audioSession.recordPermission != .granted {
+            audioSession.requestRecordPermission { (success) in
+                if !success {
+                    print("recordPermission not granted")
+                }
+            }
+        }
         
         let url = URL(fileURLWithPath: "/dev/null", isDirectory: true)
         let recorderSettings: [String: Any] = [

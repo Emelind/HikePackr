@@ -45,7 +45,6 @@ struct ContentView: View {
     @State private var editMode : Bool = false
     
     var body: some View {
-        
         NavigationView {
             VStack {
                 Form {
