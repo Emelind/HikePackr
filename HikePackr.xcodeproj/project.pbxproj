@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		985A453225E2DCC100ABEB7D /* ListRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985A453125E2DCC100ABEB7D /* ListRowView.swift */; };
+		985C0AAC25E7EDAF00ABAAD0 /* AddEditFilterTypeOfStayOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985C0AAB25E7EDAF00ABAAD0 /* AddEditFilterTypeOfStayOptionView.swift */; };
 		985F3AAC25E2880900F485C7 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985F3AAB25E2880900F485C7 /* SpeechManager.swift */; };
 		985F3AB225E29DDE00F485C7 /* MicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985F3AB125E29DDE00F485C7 /* MicManager.swift */; };
 		985F3AB525E2B7CF00F485C7 /* BarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 985F3AB425E2B7CF00F485C7 /* BarView.swift */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		985A453125E2DCC100ABEB7D /* ListRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListRowView.swift; sourceTree = "<group>"; };
+		985C0AAB25E7EDAF00ABAAD0 /* AddEditFilterTypeOfStayOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditFilterTypeOfStayOptionView.swift; sourceTree = "<group>"; };
 		985F3AAB25E2880900F485C7 /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
 		985F3AB125E29DDE00F485C7 /* MicManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicManager.swift; sourceTree = "<group>"; };
 		985F3AB425E2B7CF00F485C7 /* BarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarView.swift; sourceTree = "<group>"; };
@@ -75,6 +77,7 @@
 				985FF92D25D270E500BB8822 /* PackedItemsView.swift */,
 				98D34E9925D5643D00814A80 /* PackedCountView.swift */,
 				985A453125E2DCC100ABEB7D /* ListRowView.swift */,
+				985C0AAB25E7EDAF00ABAAD0 /* AddEditFilterTypeOfStayOptionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 				987BC10125D1B86C00C10D5D /* HikePackr.xcdatamodeld in Sources */,
 				987BC11125D1C2E600C10D5D /* AddEditItemView.swift in Sources */,
 				987BC0FE25D1B86C00C10D5D /* Persistence.swift in Sources */,
+				985C0AAC25E7EDAF00ABAAD0 /* AddEditFilterTypeOfStayOptionView.swift in Sources */,
 				987BC0F725D1B86A00C10D5D /* ContentView.swift in Sources */,
 				985A453225E2DCC100ABEB7D /* ListRowView.swift in Sources */,
 				98D34E9A25D5643D00814A80 /* PackedCountView.swift in Sources */,

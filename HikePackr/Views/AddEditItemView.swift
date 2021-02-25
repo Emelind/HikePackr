@@ -112,33 +112,18 @@ struct AddEditItemView: View {
                     Section(header: Text("Type of stay")) {
                         Text("Will you use this item if you stay in a ... ?")
                             .font(.caption)
-                        HStack {
-                            Text("Tent")
-                            Spacer()
-                            Image(systemName: tentIsChecked ? "xmark.square" : "square")
-                            
-                        }
-                        .onTapGesture {
-                            tentIsChecked.toggle()
-                        }
-                        HStack {
-                            Text("Cabin")
-                            Spacer()
-                            Image(systemName: cabinIsChecked ? "xmark.square" : "square")
-                            
-                        }
-                        .onTapGesture {
-                            cabinIsChecked.toggle()
-                        }
-                        HStack {
-                            Text("Hotel")
-                            Spacer()
-                            Image(systemName: hotelIsChecked ? "xmark.square" : "square")
-                            
-                        }
-                        .onTapGesture {
-                            hotelIsChecked.toggle()
-                        }
+                        AddEditFilterTypeOfStayOptionView(text: "Tent", isChecked: tentIsChecked)
+                            .onTapGesture {
+                                tentIsChecked.toggle()
+                            }
+                        AddEditFilterTypeOfStayOptionView(text: "Cabin", isChecked: cabinIsChecked)
+                            .onTapGesture {
+                                cabinIsChecked.toggle()
+                            }
+                        AddEditFilterTypeOfStayOptionView(text: "Hotel", isChecked: hotelIsChecked)
+                            .onTapGesture {
+                                hotelIsChecked.toggle()
+                            }
                     }
                     Section(header: Text("Quantity")) {
                         Text("If below filter is not actively modified, default number is 1 pcs dependless of number of days")
