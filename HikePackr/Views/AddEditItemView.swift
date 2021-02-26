@@ -25,12 +25,17 @@ struct AddEditItemView: View {
     // item name
     @State var name: String = ""
     
+    // category
+    @State var category = "Clothing and Footwear"
+    @State var selectedCategoryIndex = 0
+    var categoryOptions = ["Clothing and footwear", "Personal items", "Food and water", "Navigation", "Emergency and first aid", "Health and hygiene", "Other"]
+    
     // item degrees
     @State var degreeIsChecked = false
     @State var minDegree = 10
     @State var maxDegree = 15
     
-    // for picker views
+    // for picker views degrees
     var minDegrees = [Int](0...30)
     var maxDegrees = [Int](0...30)
     
@@ -73,7 +78,14 @@ struct AddEditItemView: View {
                                 })
                                 .opacity(recording ? 1 : 0)
                         }
-                        recordButton()
+                        //recordButton()
+                    }
+                }
+                Section(header: Text("Category")) {
+                    Picker(selection: $selectedCategoryIndex, label: Text("")) {
+                        ForEach(0 ..< categoryOptions.count) {
+                            Text(self.categoryOptions[$0]).tag($0)
+                        }
                     }
                 }
                 VStack {
@@ -137,16 +149,9 @@ struct AddEditItemView: View {
                         Stepper(perXNumberOfDays == 0 ? "Always" : "Every \(perXNumberOfDays) day(s)", value: $perXNumberOfDays, in: 0...10)
                     }
                 } // end of if addFilters
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        save()
-                    }, label: {
-                        Text("Save")
-                    }).disabled(errorMinMaxDegree)
-                }
             } // end of Form
         } // end of VStack
+        .navigationBarItems(trailing: saveButton())
         .onAppear() {
             speechManager.checkPermissions()
             
@@ -156,6 +161,15 @@ struct AddEditItemView: View {
             }
         }
     } // end of body
+    
+    private func saveButton() -> some View {
+            Button(action: {
+                save()
+            }, label: {
+                Text("Save")
+            })
+            .disabled(errorMinMaxDegree || name.count == 0)
+    }
     
     private func recordButton() -> some View {
         Button(action: {

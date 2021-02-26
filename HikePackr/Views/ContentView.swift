@@ -45,6 +45,7 @@ struct ContentView: View {
     @State private var editMode : Bool = false
     
     var body: some View {
+        
         NavigationView {
             VStack {
                 Form {
@@ -69,12 +70,13 @@ struct ContentView: View {
                             }
                         })
                     }
-                }                
+                }
                 Spacer()
                 Button(action: {
                     showPackedItemsView = true
                 }, label: {
                     PackedCountView()
+                        .padding(.bottom)
                 })
                 .disabled(editMode)
                 .sheet(isPresented: $showPackedItemsView) {
@@ -86,7 +88,10 @@ struct ContentView: View {
             .navigationBarItems(leading: filterButton
                                     .disabled(editMode),
                                 trailing: editButton)
-        } // end of navigation view
+            .onDisappear() {
+                editMode = false
+            }
+        }// end of navigation view
     } // end of body
     
     // filter button
@@ -289,7 +294,10 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        Group {
+            ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            ContentView().preferredColorScheme(.dark).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        }
             //.colorScheme(.dark)
     }
 }

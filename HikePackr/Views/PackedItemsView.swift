@@ -58,7 +58,7 @@ struct PackedItemsView: View {
                             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                         }
                     }, label: {
-                        Image(systemName: "minus")
+                        Image(systemName: "checkmark.square")
                             .foregroundColor(.blue)
                             .padding(10.0)
                     })

@@ -16,25 +16,29 @@ struct ListRowView: View {
     
     var body: some View {
         HStack {
-            VStack {
-                HStack {
-                    if let name = item.name {
-                        Text(name.prefix(20))
-                            .font(.headline)
+            HStack {
+//                Image(systemName: "circle.fill")
+//                    .foregroundColor(.green)
+                VStack {
+                    HStack {
+                        if let name = item.name {
+                            Text(name.prefix(20))
+                                .font(.headline)
+                        }
+                        Spacer()
                     }
-                    Spacer()
-                }
-                HStack {
-                    // call function calculateQuantity to get quantity based on number of days chosen in filter
-                    Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
-                        .font(.caption)
-                        .foregroundColor(Color.gray)
-                    if let measurement = item.measurement {
-                        Text(measurement)
+                    HStack {
+                        // call function calculateQuantity to get quantity based on number of days chosen in filter
+                        Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
                             .font(.caption)
                             .foregroundColor(Color.gray)
+                        if let measurement = item.measurement {
+                            Text(measurement)
+                                .font(.caption)
+                                .foregroundColor(Color.gray)
+                        }
+                        Spacer()
                     }
-                    Spacer()
                 }
             }
             Spacer()
@@ -53,7 +57,7 @@ struct ListRowView: View {
                         fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                     }
                 }, label: {
-                    Image(systemName: "plus")
+                    Image(systemName: "square")
                         .padding(10.0)
                 })
             }
