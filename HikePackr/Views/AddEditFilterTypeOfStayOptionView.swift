@@ -26,16 +26,6 @@ struct AddEditFilterTypeOfStayOptionView: View {
     }
 }
 
-//HStack {
-//    Text("Tent")
-//    Spacer()
-//    Image(systemName: tentIsChecked ? "xmark.square" : "square")
-//
-//}
-//.onTapGesture {
-//    tentIsChecked.toggle()
-//}
-
 //struct AddEditFilterTypeOfStayOptionView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        AddEditFilterTypeOfStayOptionView()

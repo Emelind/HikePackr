@@ -14,21 +14,17 @@ struct AddEditItemView: View {
     
     var item: Item? = nil
     
-    //TEST SPEECH TO TEXT
-    @State private var recording = false
-    @ObservedObject private var mic = MicMonitor(numberOfSamples: 30)
-    private var speechManager = SpeechManager()
-    
     // variable for filter toggle
     @State var addFilters = false
     
     // item name
     @State var name: String = ""
     
-    // category
-    @State var category = "Clothing and Footwear"
+    // TEST category
+    var categories = Categories()
+    @State var category = "Other"
     @State var selectedCategoryIndex = 0
-    var categoryOptions = ["Clothing and footwear", "Personal items", "Food and water", "Navigation", "Emergency and first aid", "Health and hygiene", "Other"]
+    //var categoryOptions = ["Other", "Clothing and footwear", "Emergency and first aid", "Food and water", "Health and hygiene", "Navigation", "Personal items"]
     
     // item degrees
     @State var degreeIsChecked = false
@@ -67,24 +63,12 @@ struct AddEditItemView: View {
         VStack {
             Form {
                 Section(header: Text("Name of Item")) {
-                    HStack {
-                        ZStack {
-                            TextField("", text: $name)
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.black.opacity(0.7))
-                                .frame(height: 40)
-                                .overlay(VStack {
-                                    visualizerView()
-                                })
-                                .opacity(recording ? 1 : 0)
-                        }
-                        //recordButton()
-                    }
+                    TextField("", text: $name)
                 }
                 Section(header: Text("Category")) {
                     Picker(selection: $selectedCategoryIndex, label: Text("")) {
-                        ForEach(0 ..< categoryOptions.count) {
-                            Text(self.categoryOptions[$0]).tag($0)
+                        ForEach(0 ..< categories.categories.count) {
+                            Text("\(self.categories.categories[$0].name)").tag($0)
                         }
                     }
                 }
@@ -153,8 +137,6 @@ struct AddEditItemView: View {
         } // end of VStack
         .navigationBarItems(trailing: saveButton())
         .onAppear() {
-            speechManager.checkPermissions()
-            
             if(!detailsSet) {
                 setDetails()
                 detailsSet = true
@@ -169,49 +151,6 @@ struct AddEditItemView: View {
                 Text("Save")
             })
             .disabled(errorMinMaxDegree || name.count == 0)
-    }
-    
-    private func recordButton() -> some View {
-        Button(action: {
-            recordItemName()
-        }, label: {
-            Image(systemName: recording ? "stop.fill" : "mic.fill")
-                .foregroundColor(recording ? .red : .blue)
-        })
-    }
-    
-    private func recordItemName() {
-        if speechManager.isRecording {
-            self.recording = false
-            mic.stopMonitoring()
-            speechManager.stopRecording()
-        } else {
-            self.recording = true
-            mic.startMonitoring()
-            speechManager.start { (speechText) in
-                guard let text = speechText, !text.isEmpty else {
-                    self.recording = false
-                    return
-                }
-                name = text
-            }
-        }
-        speechManager.isRecording.toggle()
-    }
-    
-    private func normalizedSoundLevel(level: Float) -> CGFloat {
-        let level = max(0.2, CGFloat(level) + 50) / 2
-        return CGFloat(level * (100 / 25))
-    }
-    
-    private func visualizerView() -> some View {
-        VStack {
-            HStack(spacing: 2) {
-                ForEach(mic.soundSamples, id: \.self) { level in
-                    BarView(value: self.normalizedSoundLevel(level: level))
-                }
-            }
-        }
     }
     
     private func setDetails() {
@@ -236,6 +175,25 @@ struct AddEditItemView: View {
                 selectedMeasurementIndex = 2
             } else {
                 selectedMeasurementIndex = 3
+            }
+            if (item.category == "Other") {
+                selectedCategoryIndex = 0
+            } else if (item.category == "Clothing and footwear") {
+                selectedCategoryIndex = 1
+            }else if (item.category == "Emergency and first aid") {
+                selectedCategoryIndex = 2
+            } else if(item.category == "Food and water") {
+                selectedCategoryIndex = 3
+            } else if(item.category == "Health and hygiene") {
+                selectedCategoryIndex = 4
+            } else if(item.category == "Hiking gear") {
+                selectedCategoryIndex = 5
+            } else if(item.category == "Navigation") {
+                selectedCategoryIndex = 6
+            } else if(item.category == "Personal items") {
+                selectedCategoryIndex = 7
+            } else {
+                selectedCategoryIndex = 0
             }
             perXNumberOfDays = Int(item.perXNumberOfDays)
             if(!degreeIsChecked && !tentIsChecked && !cabinIsChecked && !hotelIsChecked && quantity == 1 && selectedMeasurementIndex == 0 && perXNumberOfDays == 0) {
@@ -276,7 +234,7 @@ struct AddEditItemView: View {
                 } else {
                     item.alwaysDisplayed = false
                 }
-                item.category = ""
+                item.category = categories.categories[selectedCategoryIndex].name
                 item.isPacked = false
                 
                 if viewContext.hasChanges {
@@ -320,7 +278,7 @@ struct AddEditItemView: View {
                 } else {
                     newItem.alwaysDisplayed = false
                 }
-                newItem.category = ""
+                newItem.category = categories.categories[selectedCategoryIndex].name
                 newItem.isPacked = false
                 
                 do {

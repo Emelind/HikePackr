@@ -24,7 +24,7 @@ struct ContentView: View {
     @AppStorage("days") var numberOfDays : Int = 1
     
     // fetch all items
-    @FetchRequest(entity: Item.entity(), sortDescriptors: [], animation: .default)
+    @FetchRequest(entity: Item.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Item.category, ascending: true)], animation: .default)
     private var items: FetchedResults<Item>
     
     // call function to filter list according to filter settings

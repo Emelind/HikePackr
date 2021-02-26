@@ -17,8 +17,7 @@ struct ListRowView: View {
     var body: some View {
         HStack {
             HStack {
-//                Image(systemName: "circle.fill")
-//                    .foregroundColor(.green)
+                categoryCircle
                 VStack {
                     HStack {
                         if let name = item.name {
@@ -63,6 +62,32 @@ struct ListRowView: View {
             }
         }
     }
+    private var categoryCircle: some View {
+        return Image(systemName: "circle.fill")
+            .foregroundColor(getColor())
+    }
+    
+    private func getColor() -> Color {
+        if (item.category == "Other") {
+            return .green
+        } else if (item.category == "Clothing and footwear") {
+            return .blue
+        } else if (item.category == "Emergency and first aid") {
+            return .red
+        } else if (item.category == "Food and water") {
+            return .purple
+        } else if (item.category == "Health and hygiene") {
+            return .pink
+        } else if (item.category == "Hiking gear") {
+            return .gray
+        } else if (item.category == "Navigation") {
+            return .orange
+        } else if (item.category == "Personal items") {
+            return .yellow
+        }
+        return .black
+    }
+    
     // function to get the item quantity based on number of days chosen in filter
     private func calculateQuantity(itemQuantity: Double, perXNumberOfDays: Int64) -> Int {
         if(perXNumberOfDays > 0) {
