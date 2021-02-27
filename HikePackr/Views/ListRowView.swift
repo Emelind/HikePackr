@@ -65,13 +65,14 @@ struct ListRowView: View {
     private var categoryCircle: some View {
         return Image(systemName: "circle.fill")
             .foregroundColor(getColor())
+            .font(.caption)
     }
     
     private func getColor() -> Color {
         if (item.category == "Other") {
-            return .green
-        } else if (item.category == "Clothing and footwear") {
             return .blue
+        } else if (item.category == "Clothing and footwear") {
+            return .green
         } else if (item.category == "Emergency and first aid") {
             return .red
         } else if (item.category == "Food and water") {

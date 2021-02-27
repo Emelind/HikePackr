@@ -63,12 +63,15 @@ struct AddEditItemView: View {
         VStack {
             Form {
                 Section(header: Text("Name of Item")) {
-                    TextField("", text: $name)
+                    HStack {
+                        TextField("", text: $name)
+                        clearTextButton
+                    }
                 }
                 Section(header: Text("Category")) {
                     Picker(selection: $selectedCategoryIndex, label: Text("")) {
                         ForEach(0 ..< categories.categories.count) {
-                            Text("\(self.categories.categories[$0].name)").tag($0)
+                            Text("\(self.categories.categories[$0])").tag($0)
                         }
                     }
                 }
@@ -153,6 +156,16 @@ struct AddEditItemView: View {
             .disabled(errorMinMaxDegree || name.count == 0)
     }
     
+    private var clearTextButton: some View {
+        return AnyView(Button(action: {
+            name = ""
+        }, label: {
+            Image(systemName: "xmark.circle.fill")
+        }).disabled(name.count == 0)
+        )
+    }
+
+    
     private func setDetails() {
 
         if let item = item {
@@ -234,7 +247,7 @@ struct AddEditItemView: View {
                 } else {
                     item.alwaysDisplayed = false
                 }
-                item.category = categories.categories[selectedCategoryIndex].name
+                item.category = categories.categories[selectedCategoryIndex]
                 item.isPacked = false
                 
                 if viewContext.hasChanges {
@@ -278,7 +291,7 @@ struct AddEditItemView: View {
                 } else {
                     newItem.alwaysDisplayed = false
                 }
-                newItem.category = categories.categories[selectedCategoryIndex].name
+                newItem.category = categories.categories[selectedCategoryIndex]
                 newItem.isPacked = false
                 
                 do {

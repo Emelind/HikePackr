@@ -8,9 +8,10 @@
 import Foundation
 
 class Categories {
-    var categories: [Category]
+    
+    var categories: [String]
     
     init() {
-        categories = [Category(name: "Other", color: "green"), Category(name: "Clothing and footwear", color: "blue"), Category(name: "Emergency and first aid", color: "red"), Category(name: "Food and water", color: "purple"), Category(name: "Health and hygiene", color: "pink"), Category(name: "Hiking gear", color: "gray"), Category(name: "Navigation", color: "orange"), Category(name: "Personal items", color: "yellow")]
+        categories = ["Other", "Clothing and footwear", "Emergency and first aid", "Food and water", "Health and hygiene", "Hiking gear", "Navigation", "Personal items"]
     }
 }
