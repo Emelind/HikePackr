@@ -38,6 +38,10 @@ struct ContentView: View {
     // bool for sheet
     @State private var showPackedItemsView : Bool = false
     
+    //TEST BOOL FOR ACTION SHEET
+    @State private var showActionSheet : Bool = false
+    @State private var indexSetDelete : IndexSet?
+    
     // variabels for delete alert
     @State private var toBeDeleted: IndexSet?
     @State private var showingDeleteAlert : Bool = false
@@ -59,15 +63,18 @@ struct ContentView: View {
                             ListRowView(item: item, editMode: editMode)
                         }
                         .onDelete(perform: { indexSet in
-                            for index in indexSet {
-                                let item = filteredList[index]
-                                viewContext.delete(item)
-                                do {
-                                    try viewContext.save()
-                                } catch let error {
-                                    print("Error: \(error)")
-                                }
-                            }
+                            showActionSheet = true
+                            indexSetDelete = indexSet
+                            
+//                            for index in indexSet {
+//                                let item = filteredList[index]
+//                                viewContext.delete(item)
+//                                do {
+//                                    try viewContext.save()
+//                                } catch let error {
+//                                    print("Error: \(error)")
+//                                }
+//                            }
                         })
                     }
                 }
@@ -79,11 +86,12 @@ struct ContentView: View {
                         .padding(.bottom)
                 })
                 .disabled(editMode)
-                .sheet(isPresented: $showPackedItemsView) {
-                    PackedItemsView()
-                        .environment(\.managedObjectContext, self.viewContext)
-                }
+
             } // end of VStack
+            .sheet(isPresented: $showPackedItemsView) {
+                PackedItemsView()
+                    .environment(\.managedObjectContext, self.viewContext)
+            }
             .navigationBarTitle("Things to pack", displayMode: .automatic)
             .navigationBarItems(leading: filterButton
                                     .disabled(editMode),
@@ -91,6 +99,9 @@ struct ContentView: View {
             .onDisappear() {
                 editMode = false
             }
+            .actionSheet(isPresented: $showActionSheet, content: {
+                deleteActionSheet
+            })
         }// end of navigation view
     } // end of body
     
@@ -109,6 +120,25 @@ struct ContentView: View {
         }, label: {
             Text(editMode ? "Done" : "Edit")
         }))
+    }
+    private var deleteActionSheet: ActionSheet {
+        return ActionSheet(title: Text("Are you sure you want to delete this item?"), buttons: [
+            .destructive(Text("Delete")) {
+                if let indexSet = indexSetDelete {
+                    for index in indexSet {
+                        let item = filteredList[index]
+                        viewContext.delete(item)
+                        do {
+                            try viewContext.save()
+                        } catch let error {
+                            print("Error: \(error)")
+                        }
+                    }
+                }
+                print("Delete")
+            },
+            .cancel()
+        ])
     }
     
     // add item button
