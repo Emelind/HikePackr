@@ -23,7 +23,7 @@ struct ContentView: View {
     
     @AppStorage("days") var numberOfDays : Int = 1
     
-    // fetch all items
+    // fetch all items, sort by category
     @FetchRequest(entity: Item.entity(), sortDescriptors: [NSSortDescriptor(keyPath: \Item.category, ascending: true)], animation: .default)
     private var items: FetchedResults<Item>
     
@@ -38,7 +38,7 @@ struct ContentView: View {
     // bool for sheet
     @State private var showPackedItemsView : Bool = false
     
-    //TEST BOOL FOR ACTION SHEET
+    // variables for action sheet
     @State private var showActionSheet : Bool = false
     @State private var indexSetDelete : IndexSet?
     
@@ -46,6 +46,7 @@ struct ContentView: View {
     @State private var toBeDeleted: IndexSet?
     @State private var showingDeleteAlert : Bool = false
     
+    // enable editing items / adding new item
     @State private var editMode : Bool = false
     
     var body: some View {
@@ -53,55 +54,47 @@ struct ContentView: View {
         NavigationView {
             VStack {
                 Form {
+                    // shows addButton if editmMode = true
                     if (editMode) {
                         Section {
                             addButton
                         }
                     }
                     Section {
+                        // shows all items in filtered list
                         ForEach(filteredList) { item in
                             ListRowView(item: item, editMode: editMode)
                         }
+                        // delete function with action sheet confirmation
                         .onDelete(perform: { indexSet in
-                            showActionSheet = true
                             indexSetDelete = indexSet
-                            
-//                            for index in indexSet {
-//                                let item = filteredList[index]
-//                                viewContext.delete(item)
-//                                do {
-//                                    try viewContext.save()
-//                                } catch let error {
-//                                    print("Error: \(error)")
-//                                }
-//                            }
+                            showActionSheet = true
                         })
                     }
                 }
                 Spacer()
+                // shows packed items in new view
                 Button(action: {
                     showPackedItemsView = true
                 }, label: {
                     PackedCountView()
                         .padding(.bottom)
-                })
-                .disabled(editMode)
-
+                }).disabled(editMode)
+                
             } // end of VStack
+            .actionSheet(isPresented: $showActionSheet, content: {
+                deleteActionSheet
+            })
             .sheet(isPresented: $showPackedItemsView) {
                 PackedItemsView()
                     .environment(\.managedObjectContext, self.viewContext)
             }
             .navigationBarTitle("Things to pack", displayMode: .automatic)
-            .navigationBarItems(leading: filterButton
-                                    .disabled(editMode),
+            .navigationBarItems(leading: filterButton.disabled(editMode),
                                 trailing: editButton)
             .onDisappear() {
                 editMode = false
             }
-            .actionSheet(isPresented: $showActionSheet, content: {
-                deleteActionSheet
-            })
         }// end of navigation view
     } // end of body
     
@@ -114,6 +107,7 @@ struct ContentView: View {
             }))
     }
     
+    // edit button
     private var editButton: some View {
         return AnyView(Button(action: {
             editMode.toggle()
@@ -121,8 +115,10 @@ struct ContentView: View {
             Text(editMode ? "Done" : "Edit")
         }))
     }
+    
+    // action sheet for delete confirmation
     private var deleteActionSheet: ActionSheet {
-        return ActionSheet(title: Text("Are you sure you want to delete this item?"), buttons: [
+        return ActionSheet(title: Text("Are you sure you want to delete this item?"), message: Text("There is no undo"), buttons: [
             .destructive(Text("Delete")) {
                 if let indexSet = indexSetDelete {
                     for index in indexSet {
@@ -328,38 +324,5 @@ struct ContentView_Previews: PreviewProvider {
             ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
             ContentView().preferredColorScheme(.dark).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
         }
-            //.colorScheme(.dark)
     }
 }
-
-/*
- 1. INGA FILTER
- ** all items
- ** except item.isPacked == true
- 
- 2. BARA DEGREE, EJ STAY
- ** item.whenDegree == true  && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
- ** item.whenDegree == false && item.whenTypeOfStay == true
- ** item.alwaysDisplayed == true
- ** except item.isPacked == true
- 
- 3. BARA STAY, EJ DEGREE
- ** item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
- ** item.whenTypeOfStay == false && item.whenDegree == true
- ** item.alwaysDisplayed == true
- ** except item.isPacked == true
- 
- 4. COMBO - DEGREE + STAY
- ** item.whenDegree == true && item.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
-        &&
-    item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
- ** item.whenDegree == true && tem.minDegree..item.maxDegree match filterSettings.minDegree...filterSettings.maxDegree
-        &&
-    item.whenTypeOfStay == false
- ** item.whenDegree == false
-        &&
-    item.whenTypeOfStay == true && item.whenXXX match filterSettings.XXXisChecked == true
- ** except item.isPacked == true
- 
- ** alwaysDisplayed == true
- */

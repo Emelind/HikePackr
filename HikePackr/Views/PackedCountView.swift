@@ -10,14 +10,14 @@ import SwiftUI
 struct PackedCountView: View {
     
     @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: "isPacked == true"))
     
+    // fetch all items where isPacked = true
+    @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: "isPacked == true"))
     private var items: FetchedResults<Item>
     
     var body: some View {
         HStack {
-            Text("Packed Items ( \(items.count) )")
+            Text("Packed items ( \(items.count) )")
             Image(systemName: "bag.fill")
         }
     }

@@ -9,9 +9,6 @@ import SwiftUI
 
 struct FilterView: View {
     
-    //TEST SLIDER
-    //@ObservedObject var slider = CustomSlider(start: -10, end: 30)
-    
     @Environment(\.presentationMode) var presentationMode
     
     @ObservedObject var filterSettings = FilterSettings()
@@ -59,6 +56,7 @@ struct FilterView: View {
                                 Text("\(maxDegrees[index]) °C").tag(index)
                             }
                         })
+                        // text displayed if from degree is higher than to degree
                         if(errorMinMaxDegree) {
                             Text("From degree must be lower than to degree")
                                 .font(.caption)
@@ -66,6 +64,7 @@ struct FilterView: View {
                         }
                     }
                 }
+                // filter selections - type of stay
                 Section(header: Text("Type of stay")) {
                     Text("What type of stay(s) have you planned?")
                         .font(.caption)
@@ -79,6 +78,7 @@ struct FilterView: View {
                         Text("Hotel")
                     }
                 }
+                // filter selection - number of days
                 Section(header: Text("Number of days")) {
                     Text("For how many days will you hike?")
                         .font(.caption)
@@ -94,6 +94,7 @@ struct FilterView: View {
                         }))
     } // end of body
     
+    // resets filters
     private func resetFilters() {
         filterSettings.degreeIsChecked = false
         filterSettings.minDegree = 10
@@ -110,18 +111,3 @@ struct FilterView_Previews: PreviewProvider {
         FilterView()
     }
 }
-
-
-// TEST SLIDER
-//                        VStack {
-//                            //Text("Value: " + slider.valueBetween)
-//                            //Text("Percentages: " + slider.percentagesBetween)
-//                            HStack {
-//                                Text("From: \(Int(slider.lowHandle.currentValue)) °C")
-//                                Spacer()
-//                                Text("To: \(Int(slider.highHandle.currentValue)) °C")
-//                            }
-//                            //Slider
-//                            SliderView(slider: slider)
-//                                .padding(.bottom)
-//                        } // END TEST SLIDER

@@ -14,9 +14,15 @@ struct ListRowView: View {
     var editMode: Bool
     @AppStorage("days") var numberOfDays : Int = 1
     
+    init(item: Item, editMode: Bool) {
+        self.item = item
+        self.editMode = editMode
+    }
+    
     var body: some View {
         HStack {
             HStack {
+                // circle with color of item category
                 categoryCircle
                 VStack {
                     HStack {
@@ -41,10 +47,12 @@ struct ListRowView: View {
                 }
             }
             Spacer()
+            // if editMode = true, link to AddEditView
             if(editMode) {
                 NavigationLink(destination: AddEditItemView(item: item)) {
                     Text("")
                 }
+                // else, display square to pack items
             } else {
                 // changes item from not packed to packed
                 Button(action: {
@@ -62,11 +70,14 @@ struct ListRowView: View {
             }
         }
     }
+    
+    // circle with color item category
     private var categoryCircle: some View {
         return Image(systemName: "circle.fill")
             .foregroundColor(getColor())
             .font(.caption)
     }
+    
     
     private func getColor() -> Color {
         if (item.category == "Other") {

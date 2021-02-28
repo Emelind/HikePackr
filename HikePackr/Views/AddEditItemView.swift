@@ -62,12 +62,14 @@ struct AddEditItemView: View {
     var body: some View {
         VStack {
             Form {
+                // text field for item name and a clear text button
                 Section(header: Text("Name of Item")) {
                     HStack {
                         TextField("", text: $name)
                         clearTextButton
                     }
                 }
+                // select item category - other is default
                 Section(header: Text("Category")) {
                     Picker(selection: $selectedCategoryIndex, label: Text("")) {
                         ForEach(0 ..< categories.categories.count) {
@@ -75,6 +77,7 @@ struct AddEditItemView: View {
                         }
                     }
                 }
+                // toggle to display filter options
                 VStack {
                     Toggle(isOn: $addFilters, label: {
                         Text("Add filters?")
@@ -86,6 +89,7 @@ struct AddEditItemView: View {
                     }
                 }
                 if (addFilters) {
+                    // filter - degrees
                     Section(header: Text("Degrees")) {
                         Toggle(isOn: $degreeIsChecked, label: {
                             Text("Add temperature filter")
@@ -108,6 +112,7 @@ struct AddEditItemView: View {
                             }
                         }
                     }
+                    // filter - type of stay
                     Section(header: Text("Type of stay")) {
                         Text("Will you use this item if you stay in a ... ?")
                             .font(.caption)
@@ -124,6 +129,7 @@ struct AddEditItemView: View {
                                 hotelIsChecked.toggle()
                             }
                     }
+                    // filter - quantity per day and measurement
                     Section(header: Text("Quantity")) {
                         Text("If below filter is not actively modified, default number is 1 pcs dependless of number of days")
                             .font(.caption)
@@ -147,6 +153,7 @@ struct AddEditItemView: View {
         }
     } // end of body
     
+    // save button
     private func saveButton() -> some View {
             Button(action: {
                 save()
@@ -156,6 +163,7 @@ struct AddEditItemView: View {
             .disabled(errorMinMaxDegree || name.count == 0)
     }
     
+    // clear text button
     private var clearTextButton: some View {
         return AnyView(Button(action: {
             name = ""
@@ -165,7 +173,7 @@ struct AddEditItemView: View {
         )
     }
 
-    
+    // set details if editing an item
     private func setDetails() {
 
         if let item = item {

@@ -13,6 +13,7 @@ struct PackedItemsView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    // fetch all items that with attribute isPacked == true
     @FetchRequest(entity: Item.entity(), sortDescriptors: [], predicate: NSPredicate(format: "isPacked == true"))
     private var items: FetchedResults<Item>
     
@@ -21,11 +22,15 @@ struct PackedItemsView: View {
     
     var body: some View {
         List {
+            // displays empty bag and cancel button
             HStack {
                 clearAllButton
                 Spacer()
                 cancelButton
             }
+            .padding(.vertical)
+            
+            // displays all packed items
             ForEach(items) { item in
                 HStack {
                     VStack {
@@ -35,7 +40,7 @@ struct PackedItemsView: View {
                                     .font(.headline)
                             }
                             Spacer()
-                        } // end of HStack
+                        }
                         HStack {
                             Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
                                 .font(.caption)
@@ -67,19 +72,24 @@ struct PackedItemsView: View {
         } // end of List
     } // end of body
     
+    
+    // cancel button
     private var cancelButton: some View {
         return Button(action: {
             cancel()
         }, label: {
             Text("Cancel")
                 .foregroundColor(.blue)
+                .fontWeight(.bold)
         })
     }
     
+    // cancel function
     private func cancel() {
         presentationMode.wrappedValue.dismiss()
     }
     
+    // clear all button
     private var clearAllButton: some View {
         return Button(action: {
             clearAll()
@@ -89,7 +99,7 @@ struct PackedItemsView: View {
         })
     }
     
-    // clear all items from packed items view
+    // clear all items from packed items view function
     private func clearAll() {
         withAnimation {
             for item in items {
