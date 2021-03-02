@@ -73,27 +73,27 @@ struct ContentView: View {
                     }
                 }
                 Spacer()
-                // shows packed items in new view
-                Button(action: {
-                    showPackedItemsView = true
-                }, label: {
-                    PackedCountView()
-                        .padding(.bottom)
-                }).disabled(editMode)
-                
+                packedSheetButton
             } // end of VStack
             .actionSheet(isPresented: $showActionSheet, content: {
                 deleteActionSheet
             })
-            .sheet(isPresented: $showPackedItemsView) {
-                PackedItemsView()
-                    .environment(\.managedObjectContext, self.viewContext)
-            }
-            .navigationBarTitle("Things to pack", displayMode: .automatic)
+            .navigationBarTitleDisplayMode(.inline)
+//            .navigationTitle("Things to pack")
             .navigationBarItems(leading: filterButton.disabled(editMode),
                                 trailing: editButton)
             .onDisappear() {
                 editMode = false
+            }
+            .sheet(isPresented: $showPackedItemsView) {
+                PackedItemsView()
+                    .environment(\.managedObjectContext, self.viewContext)
+            }
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Packing List")
+                        .font(.title2)
+                }
             }
         }// end of navigation view
     } // end of body
@@ -104,6 +104,7 @@ struct ContentView: View {
             destination: FilterView(),
             label: {
                 Text("Filter")
+                    .font(.body)
             }))
     }
     
@@ -112,8 +113,19 @@ struct ContentView: View {
         return AnyView(Button(action: {
             editMode.toggle()
         }, label: {
-            Text(editMode ? "Done" : "Edit")
+                Text(editMode ? "Done" : "Edit")
+                    .font(.body)
         }))
+    }
+    
+    // button to show sheet with packed items
+    private var packedSheetButton: some View {
+        return AnyView(Button(action: {
+            showPackedItemsView = true
+        }, label: {
+            PackedCountView()
+                .padding(.bottom)
+        }).disabled(editMode))
     }
     
     // action sheet for delete confirmation
@@ -131,7 +143,6 @@ struct ContentView: View {
                         }
                     }
                 }
-                print("Delete")
             },
             .cancel()
         ])

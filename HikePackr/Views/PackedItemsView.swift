@@ -37,21 +37,19 @@ struct PackedItemsView: View {
                         HStack {
                             if let name = item.name {
                                 Text(name.prefix(20))
-                                    .font(.headline)
+                                    .font(.subheadline)
                             }
                             Spacer()
                         }
                         HStack {
                             Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
-                                .font(.caption)
-                                .foregroundColor(Color.gray)
                             if let measurement = item.measurement {
                                 Text(measurement)
-                                    .font(.caption)
-                                    .foregroundColor(Color.gray)
                             }
                             Spacer()
                         }
+                        .font(.caption)
+                        .foregroundColor(Color.gray)
                     } // end of VStack
                     Spacer()
                     Button(action: {
@@ -64,7 +62,8 @@ struct PackedItemsView: View {
                         }
                     }, label: {
                         Image(systemName: "checkmark.square")
-                            .foregroundColor(.blue)
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
                             .padding(10.0)
                     })
                 } // end of HStack
@@ -79,8 +78,8 @@ struct PackedItemsView: View {
             cancel()
         }, label: {
             Text("Cancel")
-                .foregroundColor(.blue)
-                .fontWeight(.bold)
+                .font(.body)
+                .foregroundColor(.accentColor)
         })
     }
     
@@ -95,6 +94,7 @@ struct PackedItemsView: View {
             clearAll()
         }, label: {
             Text("Empty bag")
+                .font(.body)
                 .foregroundColor(.red)
         })
     }

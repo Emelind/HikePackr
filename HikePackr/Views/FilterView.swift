@@ -33,7 +33,6 @@ struct FilterView: View {
     var body: some View {
         VStack {
             Form {
-                
                 // filter selections - degrees
                 Section(header: Text("Degrees")) {
                     Text("How many degrees °C will it be on your upcoming hike?")
@@ -42,14 +41,12 @@ struct FilterView: View {
                         Text("Choose degree range")
                     }
                     if (filterSettings.degreeIsChecked) {
-                        
                         // min degrees
                         Picker(selection: $minDegree, label: Text("From:"), content: {
                             ForEach(minDegrees, id: \.self) { index in
                                 Text("\(minDegrees[index]) °C").tag(index)
                             }
                         })
-                        
                         // max degrees
                         Picker(selection: $maxDegree, label: Text("To:"), content: {
                             ForEach(maxDegrees, id: \.self) { index in
@@ -64,6 +61,7 @@ struct FilterView: View {
                         }
                     }
                 }
+                .padding(.top)
                 // filter selections - type of stay
                 Section(header: Text("Type of stay")) {
                     Text("What type of stay(s) have you planned?")
@@ -87,12 +85,25 @@ struct FilterView: View {
             } // end of form
         } // end of VStack
         .navigationBarBackButtonHidden(errorMinMaxDegree)
-        .navigationBarItems(trailing: Button(action: {
-                            resetFilters()
-                        }, label: {
-                            Text("Reset")
-                        }))
+        .navigationBarItems(trailing: resetButton)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                VStack {
+                    Text("Filter")
+                        .font(.title2)
+                }
+            }
+        }
     } // end of body
+    
+    private var resetButton: some View {
+        return AnyView(Button(action: {
+            resetFilters()
+        }, label: {
+            Text("Reset")
+                .font(.body)
+        }))
+    }
     
     // resets filters
     private func resetFilters() {

@@ -106,9 +106,12 @@ struct AddEditItemView: View {
                                 }
                             })
                             if (errorMinMaxDegree) {
-                                Text("FROM degree must be lower than TO degree!")
-                                    .font(.caption)
-                                    .foregroundColor(Color.red)
+                                HStack {
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                    Text("From degree must be lower than to degree!")
+                                }
+                                .font(.caption)
+                                .foregroundColor(Color.red)
                             }
                         }
                     }
@@ -151,6 +154,12 @@ struct AddEditItemView: View {
                 detailsSet = true
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(item == nil ? "Add item" : "Edit item")
+                    .font(.title2)
+            }
+        }
     } // end of body
     
     // save button
@@ -159,6 +168,7 @@ struct AddEditItemView: View {
                 save()
             }, label: {
                 Text("Save")
+                    .font(.body)
             })
             .disabled(errorMinMaxDegree || name.count == 0)
     }

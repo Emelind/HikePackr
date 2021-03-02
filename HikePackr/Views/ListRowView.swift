@@ -28,22 +28,22 @@ struct ListRowView: View {
                     HStack {
                         if let name = item.name {
                             Text(name.prefix(20))
-                                .font(.headline)
+                                   
                         }
                         Spacer()
                     }
+                    .font(.subheadline)
+                    .foregroundColor(.primary)
                     HStack {
                         // call function calculateQuantity to get quantity based on number of days chosen in filter
                         Text(String(calculateQuantity(itemQuantity: item.quantity, perXNumberOfDays: item.perXNumberOfDays)))
-                            .font(.caption)
-                            .foregroundColor(Color.gray)
                         if let measurement = item.measurement {
                             Text(measurement)
-                                .font(.caption)
-                                .foregroundColor(Color.gray)
                         }
                         Spacer()
                     }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
                 }
             }
             Spacer()
@@ -65,6 +65,8 @@ struct ListRowView: View {
                     }
                 }, label: {
                     Image(systemName: "square")
+                        .font(.subheadline)
+                        .foregroundColor(.primary)
                         .padding(10.0)
                 })
             }
@@ -76,6 +78,9 @@ struct ListRowView: View {
         return Image(systemName: "circle.fill")
             .foregroundColor(getColor())
             .font(.caption)
+            .overlay(Circle().stroke(Color.black, lineWidth: 1))
+            .padding(.trailing)
+            .shadow(radius: 2)
     }
     
     

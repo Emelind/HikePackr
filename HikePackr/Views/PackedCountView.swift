@@ -17,9 +17,19 @@ struct PackedCountView: View {
     
     var body: some View {
         HStack {
-            Text("Packed items ( \(items.count) )")
             Image(systemName: "bag.fill")
+                .font(.largeTitle)
+                .foregroundColor(.accentColor)
+                .overlay(
+                    Text("\(items.count)")
+                        .foregroundColor(.white)
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .baselineOffset(-5)
+                    , alignment: .center
+                )
         }
+        
     }
 }
 
