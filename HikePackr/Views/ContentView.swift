@@ -154,9 +154,10 @@ struct ContentView: View {
                         destination: AddEditItemView(item: nil),
                         label: {
                             HStack {
+                                Image(systemName: "plus")
                                 Text("New item")
-                                    .foregroundColor(.blue)
                             }
+                            .foregroundColor(.accentColor)
                         }))
     }
         

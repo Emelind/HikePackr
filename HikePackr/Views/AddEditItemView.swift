@@ -63,7 +63,7 @@ struct AddEditItemView: View {
         VStack {
             Form {
                 // text field for item name and a clear text button
-                Section(header: Text("Name of Item")) {
+                Section(header: Text("Name")) {
                     HStack {
                         TextField("", text: $name)
                         clearTextButton
